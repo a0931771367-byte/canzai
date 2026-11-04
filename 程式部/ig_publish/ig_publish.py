@@ -179,6 +179,9 @@ def main():
     sub.add_parser("limit")
     sub.add_parser("refresh")
     a = ap.parse_args()
+    if os.environ.get("IG_TOKEN") and not os.environ.get("IG_USER_ID") and not getattr(a, "dry_run", False):
+        me = call("GET", "me", fields="user_id")  # IG_USER_ID 沒填就自己查
+        os.environ["IG_USER_ID"] = str(me.get("user_id") or me.get("id"))
     if a.cmd != "post" or not a.dry_run:
         if not os.environ.get("IG_TOKEN") or not os.environ.get("IG_USER_ID"):
             raise SystemExit("缺少 IG_TOKEN / IG_USER_ID，請先完成 技術方案.md 的一次性設定")

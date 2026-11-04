@@ -1,6 +1,6 @@
 # 放到 canzai repo 的 .github/workflows/publish.yml（程式部會推上去）
 # 每 10 分鐘跑一次 run_schedule.py；到時間的貼文才會發，其他時候什麼都不做。
-# 需要的 repo secrets：IG_TOKEN、IG_USER_ID（罐子在 repo Settings → Secrets and variables → Actions 新增）。沒設定時自動略過。
+# 需要的 repo secrets：IG_TOKEN（IG_USER_ID 可不填，會自己查）（罐子在 repo Settings → Secrets and variables → Actions 新增）。沒設定時自動略過。
 name: 罐仔自動發文
 on:
   schedule:
