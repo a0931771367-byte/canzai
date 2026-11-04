@@ -1,0 +1,28 @@
+# 放到 canzai repo 的 .github/workflows/refresh_token.yml
+# IG 長效 token 60 天到期：每週一台灣 07:07 續期一次，並把新 token 寫回 repo secret IG_TOKEN。
+# Actions 預設的 GITHUB_TOKEN 不能改 secret，所以要罐子建一次「fine-grained personal access token」：
+#   只授權 canzai 這個 repo，權限 Secrets: Read and write，存成 repo secret GH_SECRETS_PAT（免費）。
+# 續期失敗（token 已過期）時 job 失敗、GitHub 寄信，要罐子重新授權一次。
+name: 續期 IG token
+on:
+  schedule:
+    - cron: "7 23 * * 0"   # UTC 週日 23:07 = 台灣週一 07:07
+  workflow_dispatch: {}
+permissions: {}
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 續期並更新 secret
+        env:
+          IG_TOKEN: ${{ secrets.IG_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_SECRETS_PAT }}
+        run: |
+          set -euo pipefail
+          if [ -z "$IG_TOKEN" ] || [ -z "$GH_TOKEN" ]; then echo "還沒設定 IG_TOKEN 或 GH_SECRETS_PAT，略過"; exit 0; fi
+          res=$(curl -sfS "https://graph.instagram.com/refresh_access_token?grant_type=ig_refresh_token&access_token=${IG_TOKEN}")
+          new=$(echo "$res" | python3 -c 'import sys,json;print(json.load(sys.stdin)["access_token"])')
+          days=$(echo "$res" | python3 -c 'import sys,json;print(json.load(sys.stdin)["expires_in"]//86400)')
+          echo "::add-mask::$new"
+          gh secret set IG_TOKEN --repo "$GITHUB_REPOSITORY" --body "$new"
+          echo "續期成功，新 token 還有 ${days} 天"

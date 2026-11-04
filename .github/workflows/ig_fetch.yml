@@ -1,0 +1,45 @@
+# 放到 canzai repo 的 .github/workflows/ig_fetch.yml
+# 數據部每日數據：台灣 08:13 抓昨天一天的數據；週一多抓上週一到本週一的區間（給 08:51 週報）。
+# 程式在 repo 的 tools/ig_fetch.py（照搬 數據部/ig_fetch.py），輸出 commit 到 data/ig/。
+# 失敗（token 過期、API 錯誤）時 job 會失敗，GitHub 寄信通知 repo 擁有者，不會 commit。
+name: 罐仔 IG 數據
+on:
+  schedule:
+    - cron: "13 0 * * *"   # UTC 00:13 = 台灣 08:13
+  workflow_dispatch: {}
+concurrency: { group: ig-data, cancel-in-progress: false }
+permissions: { contents: write }
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      IG_TOKEN: ${{ secrets.IG_TOKEN }}
+      IG_OUT_DIR: data/ig
+      IG_SKIP_REFRESH: "1"
+      TZ: Asia/Taipei
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - name: 每日（昨天 → 今天）
+        run: |
+          set -euo pipefail
+          if [ -z "$IG_TOKEN" ]; then echo "還沒設定 IG_TOKEN secret，略過"; exit 0; fi
+          mkdir -p data/ig/週報/raw
+          python3 tools/ig_fetch.py --since "$(date -d yesterday +%F)" --until "$(date +%F)"
+      - name: 週一：上週區間
+        run: |
+          set -euo pipefail
+          if [ -n "$IG_TOKEN" ] && [ "$(date +%u)" = "1" ]; then
+            python3 tools/ig_fetch.py --since "$(date -d '7 days ago' +%F)" --until "$(date +%F)"
+          else
+            echo "今天不是週一，略過"
+          fi
+      - name: commit 數據
+        run: |
+          git config user.name "canzai-bot"; git config user.email "canzai-bot@users.noreply.github.com"
+          git add data/ig
+          git diff --cached --quiet && { echo "沒有新數據"; exit 0; }
+          git commit -qm "IG 數據 $(date +%F)"
+          for i in 1 2 3; do git pull -q --rebase && git push -q && break; sleep 5; done

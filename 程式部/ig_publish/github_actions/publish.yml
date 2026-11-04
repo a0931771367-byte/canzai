@@ -1,0 +1,35 @@
+# 放到 canzai repo 的 .github/workflows/publish.yml（程式部會推上去）
+# 每 10 分鐘跑一次 run_schedule.py；到時間的貼文才會發，其他時候什麼都不做。
+# 需要的 repo secrets：IG_TOKEN、IG_USER_ID（罐子在 repo Settings → Secrets and variables → Actions 新增）。沒設定時自動略過。
+name: 罐仔自動發文
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch: {}
+concurrency: { group: publish, cancel-in-progress: false }
+permissions: { contents: write }
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install pillow numpy opencc
+      - name: 跑排程
+        env:
+          IG_TOKEN: ${{ secrets.IG_TOKEN }}
+          IG_USER_ID: ${{ secrets.IG_USER_ID }}
+          CANZAI_CONTENT: 內容部
+          CANZAI_MEDIA_BASE: https://a0931771367-byte.github.io/canzai/%E5%85%A7%E5%AE%B9%E9%83%A8
+        run: |
+          if [ -z "$IG_TOKEN" ]; then echo "還沒設定 IG_TOKEN secret，略過"; exit 0; fi
+          python3 程式部/ig_publish/run_schedule.py
+      - name: 存回發文紀錄
+        run: |
+          git config user.name "canzai-bot"; git config user.email "canzai-bot@users.noreply.github.com"
+          git add -A 程式部/ig_publish/publish_ledger.json 程式部/ig_publish/待處理.md 內容部 2>/dev/null || true
+          git diff --cached --quiet && exit 0
+          git commit -qm "發文紀錄 $(date -u +%FT%TZ)"
+          for i in 1 2 3; do git pull -q --rebase && git push -q && break; sleep 5; done
