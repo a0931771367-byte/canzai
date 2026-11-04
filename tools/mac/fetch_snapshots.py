@@ -4,7 +4,7 @@
 為什麼：雲端環境有網路白名單，每多一家銀行就要加一次；GitHub 本來就連得到，所以只要 Mac 把頁面抓好放上去，
 雲端就不用再加任何白名單。Mac 是台灣 IP，也比較不會被銀行網站擋掉國外連線。
 
-流程（launchd 每天 06:30、11:30 各跑一次，install_mac.sh 會設定好）：
+流程（launchd 每天 00:30、11:30、17:30 各跑一次，install_mac.sh 會設定好）：
   1. git pull 快照 repo 的 snapshots 分支（裡面的 urls.txt 是雲端依貼文.md 查證欄自動產生的網址清單）
   2. 一個一個抓（一般 HTTP，內容太少就用 Playwright，沒裝就略過）
   3. 寫 pages/<網址雜湊>.txt 和 index.json，commit 後 push
@@ -85,7 +85,14 @@ def main():
             text, how = fetch(u)
             with open(os.path.join(REPO, "pages", f"{k}.txt"), "w", encoding="utf-8") as f:
                 f.write(text)
-            idx[u] = {"key": k, "fetched_at": now, "ok": True, "how": how, "chars": len(text)}
+            sha = hashlib.sha1(re.sub(r"\s+", "", text).encode()).hexdigest()[:12]
+            prev = idx.get(u, {})
+            changed = prev.get("sha") and prev["sha"] != sha
+            idx[u] = {"key": k, "fetched_at": now, "ok": True, "how": how, "chars": len(text), "sha": sha,
+                      "changed_at": now if changed else prev.get("changed_at", now if not prev.get("sha") else "")}
+            if changed:  # 記下頁面什麼時候改過，累積幾週後就知道各銀行實際的更新時段
+                with open(os.path.join(REPO, "changes.log"), "a", encoding="utf-8") as f:
+                    f.write(f"{now}\t{u}\n")
             ok += 1
         except Exception as e:  # noqa: BLE001
             prev = idx.get(u, {})
