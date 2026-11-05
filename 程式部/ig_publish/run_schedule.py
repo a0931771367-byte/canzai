@@ -183,7 +183,8 @@ def main():
             save_ledger(led)
             todo(f"{pid}「{title}」IG 上已經有了（可能是手動或 Metricool 發的），排程沒有重發")
         else:
-            why = {2: "官網重查擋下（看資料夾裡的 查證報告.md）", 1: "合規或文案檢查沒過"}.get(r.returncode, "發文失敗")
+            why = {2: "官網重查擋下（看資料夾裡的 查證報告.md）", 1: "合規或文案檢查沒過",
+                   5: "品管部去 AI 感檢查沒過（看 品管部/去AI感檢查表.md）"}.get(r.returncode, "發文失敗")
             todo(f"{pid}「{title}」{why}，結束碼 {r.returncode}。修好後 2 小時內排程會自動重試")
         return  # 一次只發一篇
 
