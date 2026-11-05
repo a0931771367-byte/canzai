@@ -1,8 +1,8 @@
 {
- "_說明": "罐仔只走 IG 官方 API（Instagram Login，不綁 FB），由 run_schedule.py 在 GitHub Actions 每 10 分鐘發文。11/3 罐子決定不用 Metricool。",
- "canzai": {
-  "ig_handle": "canzai_money",
-  "schedule_enabled": false,
-  "schedule_enabled_note": "上線日 11/4。要等兩件事都完成才改成 true：①「開通 IG 帳號與全部授權」回報 Meta 授權完成（跑過 verify_auth.py 全綠）②罐子核准封面一覽。之後依 內容部/第1-2週/排程.md 發文。"
- }
+  "_說明": "罐仔只走 IG 官方 API（Instagram Login，不綁 FB），由 run_schedule.py 在 GitHub Actions 每 10 分鐘發文。11/3 罐子決定不用 Metricool。",
+  "canzai": {
+    "ig_handle": "canzai_money",
+    "schedule_enabled": true,
+    "schedule_enabled_note": "11/5 解鎖：verify_auth 在 GitHub Actions 通過（只缺洞察權限，不影響發文），罐子已核准封面一覽。要暫停自動發文就改回 false。"
+  }
 }
