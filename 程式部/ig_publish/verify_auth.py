@@ -225,7 +225,12 @@ def main():
     items = (media or {}).get("data", [])
     if media is not None:
         rep.add("抓貼文", True, f"抓到 {len(items)} 則" + (f"，最新 {items[0]['timestamp'][:10]}" if items else "（帳號還沒有貼文，正常）"))
-    ins = step(rep, "帳號洞察", lambda: call("GET", f"{uid}/insights", token, metric="reach,follower_count", period="day"))
+    # 洞察權限只影響數據報告，不影響發文和回覆，所以缺了記成 ⚠️ 不算失敗
+    try:
+        ins = call("GET", f"{uid}/insights", token, metric="reach,follower_count", period="day")
+    except ApiError as e:
+        ins = None
+        rep.add("帳號洞察", None, f"{e}（只影響數據報告，發文不受影響）", e.hint())
     if ins is not None:
         vals = {m["name"]: (m.get("values") or [{}])[-1].get("value") for m in ins.get("data", [])}
         rep.add("帳號洞察", True, f"manage_insights 權限正常：{vals or '新帳號還沒有數據'}")
