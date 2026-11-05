@@ -5,6 +5,9 @@ name: 罐仔自動發文
 on:
   schedule:
     - cron: "*/10 * * * *"
+    # GitHub 的 */10 實際常拖好幾小時才跑一次，所以在發文時段（台灣 12:00、20:00）前後多排幾次
+    - cron: "2,7,13,19,27,38,52 4 * * *"
+    - cron: "2,7,13,19,27,38,52 12 * * *"
   workflow_dispatch: {}
 concurrency: { group: publish, cancel-in-progress: false }
 permissions: { contents: write }
