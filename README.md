@@ -1,4 +1,4 @@
-# 罐仔（@canzai.money）
+# 罐仔（@canzai_money）
 
 - 網站：https://a0931771367-byte.github.io/canzai/
   - `index.html`：罐仔刷卡試算器（自填卡片、瀏覽器內計算、不上傳任何資料）

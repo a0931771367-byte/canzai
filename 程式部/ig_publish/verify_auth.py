@@ -23,7 +23,7 @@ from datetime import datetime, timezone
 API = "https://graph.instagram.com/v23.0"
 HERE = os.path.dirname(os.path.abspath(__file__))
 TOKEN_FILE = os.environ.get("IG_TOKEN_FILE", os.path.join(os.path.dirname(os.path.dirname(HERE)), "數據部", ".ig_token"))
-EXPECTED_USER = "canzai.money"
+EXPECTED_USER = "canzai_money"
 
 # 常見錯誤碼 → 怎麼修（Meta 錯誤訊息是英文，這裡翻成要做的事）
 FIX = {
