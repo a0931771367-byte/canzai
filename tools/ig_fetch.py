@@ -11,7 +11,20 @@
 import argparse, csv, json, os, re, sys, urllib.parse, urllib.request
 from datetime import datetime, timezone, timedelta
 
-BASE = "https://graph.instagram.com"
+IG_BASE = "https://graph.instagram.com"
+FB_BASE = "https://graph.facebook.com"  # EAA 開頭的 token（新版 Meta 後台）要打這裡
+CANZAI_IG_ID = "17841467330075264"  # @canzai_money；可用環境變數 IG_USER_ID 覆寫
+BASE = IG_BASE
+
+
+def use_token(token):
+    """依 token 開頭選網域與 IG 用戶編號（同 程式部/common/ig_api.py）。"""
+    global BASE
+    fb = token.startswith("EAA")
+    BASE = FB_BASE if fb else IG_BASE
+    uid = os.environ.get("IG_USER_ID") or (CANZAI_IG_ID if fb else "me")
+    fields = "id,username,followers_count,media_count" if fb else "user_id,username,followers_count,media_count"
+    return fb, uid, fields
 VER = os.environ.get("IG_API_VERSION", "v23.0")
 HERE = os.path.dirname(os.path.abspath(__file__))
 TOKEN_FILE = os.path.join(HERE, ".ig_token")
@@ -80,21 +93,24 @@ def main():
     ap.add_argument("--since", required=True)
     ap.add_argument("--until", required=True)
     a = ap.parse_args()
-    token = load_token() if os.environ.get("IG_SKIP_REFRESH") else refresh(load_token())
+    token = load_token()
+    fb, uid, me_fields = use_token(token)
+    if not fb and not os.environ.get("IG_SKIP_REFRESH"):  # EAA token 不走 IG 的續期端點
+        token = refresh(token)
 
-    me = get(f"{VER}/me", fields="user_id,username,followers_count,media_count", access_token=token)
+    me = get(f"{VER}/{uid}", fields=me_fields, access_token=token)
 
     acct = {}
     for m in ["reach", "views", "accounts_engaged", "profile_views", "total_interactions", "follows_and_unfollows"]:
         try:
-            r = get(f"{VER}/me/insights", metric=m, period="day", metric_type="total_value",
+            r = get(f"{VER}/{uid}/insights", metric=m, period="day", metric_type="total_value",
                     since=ts(a.since), until=ts(a.until), access_token=token)
             acct[m] = r["data"][0]["total_value"]
         except Exception as e:
             acct[m] = f"無法取得：{e}"
 
     posts = []
-    media = get(f"{VER}/me/media", limit=50, access_token=token,
+    media = get(f"{VER}/{uid}/media", limit=50, access_token=token,
                 fields="id,caption,media_type,media_product_type,timestamp,permalink,like_count,comments_count")
     for p in media.get("data", []):
         t = datetime.strptime(p["timestamp"], "%Y-%m-%dT%H:%M:%S%z").astimezone(TW).strftime("%Y-%m-%d")

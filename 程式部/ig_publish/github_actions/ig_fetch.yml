@@ -39,6 +39,7 @@ jobs:
       - name: commit 數據
         run: |
           git config user.name "canzai-bot"; git config user.email "canzai-bot@users.noreply.github.com"
+          [ -d data/ig ] || { echo "沒有新數據"; exit 0; }
           git add data/ig
           git diff --cached --quiet && { echo "沒有新數據"; exit 0; }
           git commit -qm "IG 數據 $(date +%F)"
