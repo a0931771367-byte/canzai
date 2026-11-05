@@ -143,7 +143,12 @@ class Api:
             with urllib.request.urlopen(req, timeout=30) as r:
                 return json.load(r)
         except urllib.error.HTTPError as e:
-            raise RuntimeError(f"{method} {path} → HTTP {e.code} {e.read().decode(errors='replace')[:300]}")
+            # 公開 repo 的 Actions 紀錄任何人都看得到：只印狀態碼和 Meta 錯誤碼，不印回應全文和路徑裡的編號
+            try:
+                err = json.loads(e.read().decode(errors="replace")).get("error", {})
+            except ValueError:
+                err = {}
+            raise RuntimeError(f"{method} {path.split('/')[-1]} → HTTP {e.code}，錯誤碼 {err.get('code')}／{err.get('error_subcode')}")
 
     def send(self, what, method, path, **params):
         if self.sent >= MAX_SENDS:
@@ -157,11 +162,11 @@ class Api:
         return self.page or self.uid
 
     def private_reply(self, comment_id):
-        return self.send(f"留言私訊 → {comment_id}", "POST", f"{self.messages_node()}/messages",
+        return self.send(f"留言私訊 1 則（{h(comment_id)[:8]}）", "POST", f"{self.messages_node()}/messages",
                          recipient={"comment_id": comment_id}, message={"text": FIRST_DM})
 
     def dm(self, igsid, text):
-        return self.send(f"私訊 → {igsid}：{text[:20]}…", "POST", f"{self.messages_node()}/messages",
+        return self.send(f"私訊 1 則（{h(igsid)[:8]}）", "POST", f"{self.messages_node()}/messages",
                          recipient={"id": igsid}, message={"text": text})
 
 
@@ -187,7 +192,7 @@ def handle_comments(api, st, sheet, now):
             used = st["public_used"].setdefault(m["id"], {})
             pick = min(PUBLIC, key=lambda p: used.get(p, 0))
             if used.get(pick, 0) < 3:
-                if api.send(f"公開回覆 {c['id']}：{pick}", "POST", f"{c['id']}/replies", message=pick) is None:
+                if api.send(f"公開回覆 1 則（{ck[:8]}）：{pick}", "POST", f"{c['id']}/replies", message=pick) is None:
                     return
                 used[pick] = used.get(pick, 0) + 1
             if recent(person.get("first_dm"), now):

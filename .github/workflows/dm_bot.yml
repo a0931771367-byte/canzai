@@ -2,6 +2,7 @@
 # 「選卡」自動回覆：排程每 5 分鐘（GitHub 實際常延遲，可能 10 分鐘到數小時一次）跑 dm_bot.py。
 # 隱私（法務部 11/5 審查）：帳號名稱、訊息只寫進罐子的 Google 試算表；這裡的去重狀態只有 HMAC 雜湊編號和時間，
 # 存在 Actions cache（不進 git、不能公開下載，7 天沒用到 GitHub 會自己清掉），程式每輪也會刪 90 天前的紀錄。
+# 公開 repo 的執行紀錄任何人都看得到：這裡不要加 --dry-run 或 --dump（會印出內容），程式只印雜湊前 8 碼和錯誤碼。
 # 需要 secrets：IG_TOKEN、CANZAI_BOT_KEY、CANZAI_SHEET_URL。沒設定就略過。連續 3 次錯誤會讓 job 失敗，GitHub 寄信通知。
 name: 選卡自動回覆
 on:

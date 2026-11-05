@@ -53,6 +53,7 @@ function doPost(e) {
         for (let i = 1; i < v.length; i++) {
           const [time, , igsid, , , draft, ok, sent] = v[i];
           if (sent) continue;
+          if (bad(time)) { ss.getSheetByName(name).getRange(i + 1, 8).setValue('時間格式錯誤'); continue; }
           if (ok === true && String(draft).trim()) items.push({tab: name, row: i + 1, igsid: String(igsid), text: String(draft), time: String(time)});
           else if (name === '選卡待回覆' && now - parse(time) > 20 * 3600e3 && now - parse(time) < 24 * 3600e3) late++;
         }
@@ -82,5 +83,7 @@ function parse(t) {
   const ms = Date.parse(s);
   return isNaN(ms) ? Date.now() : ms;  // 認不得的時間先留著，不誤刪
 }
+
+function bad(t) { return isNaN(Date.parse(String(t).replace(/([+-]\d\d)(\d\d)$/, '$1:$2'))); }
 
 function out(o) { return ContentService.createTextOutput(JSON.stringify(o)).setMimeType(ContentService.MimeType.JSON); }
