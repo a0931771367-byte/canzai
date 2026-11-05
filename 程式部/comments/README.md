@@ -59,4 +59,7 @@ IG_TOKEN=... python3 ig_comments.py send out/留言回覆待審.json [--dry-run]
 - 去重狀態只有 HMAC-SHA256（鹽值由 CANZAI_BOT_KEY 衍生）後的編號和時間，放 Actions cache，不進 git。
 - 試算表那端是 `試算表_AppsScript.gs`（Apps Script 網頁應用程式），用 CANZAI_BOT_KEY 驗證呼叫者。
 - 需要的 repo secrets：IG_TOKEN、CANZAI_BOT_KEY（setup 產生）、CANZAI_SHEET_URL（部署網址）。
+- 選填 secret：ANTHROPIC_API_KEY。有設才啟用 `intent.py`：沒寫關鍵字、也還沒收過第一則的私訊，先遮蔽卡號和身分證，再問 Claude Haiku 5.5「是不是想選卡」，是就送第一則固定範本。AI 不寫回覆內容；出錯一律當沒判斷，照舊寫進試算表。每輪最多判斷 20 則。
+  - 費用：Haiku 5.5 輸入 US$0.10、輸出 US$0.50／百萬 token（Anthropic 價目頁，2026-11-05 查證），1,000 則約 US$0.07。
+  - 金鑰設定：Console（platform.claude.com）→ 建一個專用工作區 canzai-bot、設月支出上限 US$5 → 在這個工作區建 API 金鑰 → 貼到 repo secret ANTHROPIC_API_KEY。組織「自動儲值」保持關閉，每 90 天換一次金鑰。
 - 雲端 Claude 起草回覆：用 Google 試算表工具讀「選卡待回覆」，把草稿填進「罐仔回覆草稿」欄，罐子勾「核准」才會送。

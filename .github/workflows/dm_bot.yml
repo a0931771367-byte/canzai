@@ -4,6 +4,7 @@
 # 存在 Actions cache（不進 git、不能公開下載，7 天沒用到 GitHub 會自己清掉），程式每輪也會刪 90 天前的紀錄。
 # 公開 repo 的執行紀錄任何人都看得到：這裡不要加 --dry-run 或 --dump（會印出內容），程式只印雜湊前 8 碼和錯誤碼。
 # 需要 secrets：IG_TOKEN、CANZAI_BOT_KEY、CANZAI_SHEET_URL。沒設定就略過。連續 3 次錯誤會讓 job 失敗，GitHub 寄信通知。
+# 選填 ANTHROPIC_API_KEY：有設才用 Haiku 5.5 判斷沒寫關鍵字的私訊是不是想選卡（intent.py，金鑰請建在設了月上限的專用工作區）。
 name: 選卡自動回覆
 on:
   schedule:
@@ -21,6 +22,7 @@ jobs:
       IG_TOKEN: ${{ secrets.IG_TOKEN }}
       CANZAI_BOT_KEY: ${{ secrets.CANZAI_BOT_KEY }}
       CANZAI_SHEET_URL: ${{ secrets.CANZAI_SHEET_URL }}
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
       CANZAI_STATE_FILE: ${{ github.workspace }}/.dm_state/state.json
     steps:
       - name: 檢查 secrets
@@ -33,6 +35,9 @@ jobs:
       - uses: actions/setup-python@v5
         if: steps.chk.outputs.skip != '1'
         with: { python-version: "3.12" }
+      - name: 安裝 Anthropic 套件（有設 ANTHROPIC_API_KEY 才裝）
+        if: steps.chk.outputs.skip != '1' && env.ANTHROPIC_API_KEY != ''
+        run: pip install --quiet anthropic==2.5.0
       - name: 取回上一輪狀態
         if: steps.chk.outputs.skip != '1'
         uses: actions/cache/restore@v4

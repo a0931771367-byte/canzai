@@ -4,6 +4,7 @@
 每輪做三件事：
   ① 最近 10 篇貼文的新留言含「選卡」→ 公開回覆（3 種輪替）＋留言私訊第一則
   ② 新私訊：「選卡／幫我選卡／配卡」→ 私訊第一則（24 小時內同一人只送一次）；
+     關鍵字沒對到、這人也還沒收過第一則 → 有 ANTHROPIC_API_KEY 時問 Haiku 5.5 是不是想選卡（intent.py），是就送第一則；
      已送過第一則的人回的話 → 寫進試算表「選卡待回覆」；其他 → 寫進「私訊待處理」
   ③ 試算表裡罐子勾了「核准」的回覆 → 送出，並在「送出狀態」寫上時間
      （雲端 Claude 每天 12:00、21:00 在試算表填「罐仔回覆草稿」，罐子看過勾核准）
@@ -34,6 +35,7 @@ import urllib.request
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(os.path.dirname(HERE), "common"))
 import ig_api  # noqa: E402
+from intent import Intent  # noqa: E402
 
 STATE_FILE = os.environ.get("CANZAI_STATE_FILE", os.path.join(os.path.dirname(os.path.dirname(HERE)), ".dm_state", "state.json"))
 TZ = dt.timezone(dt.timedelta(hours=8))
@@ -205,7 +207,7 @@ def handle_comments(api, st, sheet, now):
             st["comments"][ck] = now.isoformat()
 
 
-def handle_dms(api, st, sheet, now):
+def handle_dms(api, st, sheet, now, intent=None):
     node = api.messages_node()
     convs = api.call("GET", f"{node}/conversations", platform="instagram",
                      fields="id,updated_time,messages.limit(5){id,message,from,created_time}", limit=20).get("data", [])
@@ -219,7 +221,12 @@ def handle_dms(api, st, sheet, now):
                 continue
             who, text = frm.get("id", ""), msg.get("message", "")
             person = st["people"].setdefault(h(who), {})
-            if KEYWORD_DM.search(text) and len(text) <= 12:
+            safe, masked = mask(text)
+            hit = bool(KEYWORD_DM.search(text) and len(text) <= 12)
+            if not hit and intent and not person.get("first_dm") and intent.wants_card(safe):
+                print(f"意圖判斷：選卡（{mk[:8]}）")
+                hit = True
+            if hit:
                 if recent(person.get("first_dm"), now):
                     print("略過：這個人 24 小時內已收過第一則")
                 else:
@@ -227,7 +234,6 @@ def handle_dms(api, st, sheet, now):
                         return
                     person["first_dm"] = now.isoformat()
             else:
-                safe, masked = mask(text)
                 tab = "選卡待回覆" if person.get("first_dm") else "私訊待處理"
                 # 先寫進試算表，成功才記成已處理；寫失敗下一輪會再試，不會漏
                 sheet.call("append", tab=tab, row=[msg.get("created_time") or now.isoformat(), frm.get("username", ""),
@@ -272,11 +278,14 @@ def main():
     if st.get("errors", 0) >= 3 and not a.dry_run:
         sys.exit("⛔ 已連續 3 次錯誤，暫停中。修好後到 Actions 手動跑「選卡自動回覆」並勾 reset_errors")
     now = dt.datetime.now(TZ)
-    api, sheet = Api(token, a.dry_run), Sheet(a.dry_run)
+    api, sheet, intent = Api(token, a.dry_run), Sheet(a.dry_run), Intent(a.dry_run)
     ok = True
     for step in (handle_comments, handle_dms, send_outbox):
         try:
-            step(api, st, sheet, now)
+            if step is handle_dms:
+                step(api, st, sheet, now, intent)
+            else:
+                step(api, st, sheet, now)
         except RuntimeError as e:
             ok = False
             print(f"❌ {step.__name__}：{e}")
@@ -284,7 +293,7 @@ def main():
     purge(st, now)
     if not a.dry_run:
         save_state(st)
-    print(f"完成：送出 {api.sent} 則，連續錯誤 {st['errors']} 次")
+    print(f"完成：送出 {api.sent} 則，意圖判斷 {intent.calls} 次，連續錯誤 {st['errors']} 次")
     if not ok:
         sys.exit(1)
 
