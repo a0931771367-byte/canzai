@@ -31,6 +31,7 @@ if not os.environ.get("IG_TOKEN") and os.path.exists(_TOKEN_FILE):
     os.environ["IG_TOKEN"] = open(_TOKEN_FILE).read().strip()
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "common"))
 from ig_skills import humanize, lint_caption  # noqa: E402  /ig-human、/ig-caption
+import ig_api  # noqa: E402  IG 開頭 → graph.instagram.com；EAA 開頭 → graph.facebook.com
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "factcheck"))
 import factcheck  # noqa: E402  發文當天自動重查官網
 from compliance import check_folder  # noqa: E402  法務部合規檢查（規則每次重新載入）
@@ -40,7 +41,7 @@ def call(method, path, **params):
     token = os.environ.get("IG_TOKEN")
     params["access_token"] = token
     data = urllib.parse.urlencode(params).encode()
-    url = f"{API}/{path}"
+    url = f"{ig_api.base(token)}/{path}"
     if method == "GET":
         req = urllib.request.Request(url + "?" + data.decode())
     else:
@@ -82,7 +83,13 @@ def account_gate(dry, manual=False):
         raise SystemExit("⏸ 排程還沒啟用（brands.json schedule_enabled=false）：" + cfg.get("schedule_enabled_note", ""))
     if dry:
         return
-    me = call("GET", "me", fields="username")
+    tok = os.environ.get("IG_TOKEN", "")
+    left = ig_api.token_days_left(tok)
+    if left is not None and left <= 0:
+        raise SystemExit("⛔ IG token 已過期，請到 Meta 後台重新產生，更新 secret IG_TOKEN")
+    if left is not None and left < 10:
+        print(f"⚠️ IG token 只剩 {left:.0f} 天，請盡快到 Meta 後台重新產生")
+    me = call("GET", ig_api.uid(tok), fields="username")
     if me.get("username") != cfg["ig_handle"]:
         raise SystemExit(f"⛔ token 授權的帳號是 @{me.get('username')}，不是 @{cfg['ig_handle']}，不發文")
 
@@ -100,7 +107,7 @@ def find_duplicate(caption, hours=48):
     if not key:
         return None
     try:
-        res = call("GET", "me/media", fields="id,caption,timestamp", limit=25)
+        res = call("GET", f"{ig_api.uid(os.environ.get('IG_TOKEN', ''))}/media", fields="id,caption,timestamp", limit=25)
     except SystemExit as e:
         print(f"（防重複檢查略過：{e}）")
         return None
@@ -213,8 +220,11 @@ def main():
     sub.add_parser("refresh")
     a = ap.parse_args()
     if os.environ.get("IG_TOKEN") and not os.environ.get("IG_USER_ID") and not getattr(a, "dry_run", False):
-        me = call("GET", "me", fields="user_id")  # IG_USER_ID 沒填就自己查
-        os.environ["IG_USER_ID"] = str(me.get("user_id") or me.get("id"))
+        if ig_api.is_fb(os.environ["IG_TOKEN"]):
+            os.environ["IG_USER_ID"] = ig_api.CANZAI_IG_ID
+        else:
+            me = call("GET", "me", fields="user_id")  # IG_USER_ID 沒填就自己查
+            os.environ["IG_USER_ID"] = str(me.get("user_id") or me.get("id"))
     if a.cmd != "post" or not a.dry_run:
         if not os.environ.get("IG_TOKEN") or not os.environ.get("IG_USER_ID"):
             raise SystemExit("缺少 IG_TOKEN / IG_USER_ID，請先完成 技術方案.md 的一次性設定")

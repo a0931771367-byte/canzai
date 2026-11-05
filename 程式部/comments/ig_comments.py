@@ -15,6 +15,9 @@ import json
 import os
 import urllib.parse
 import urllib.request
+import sys
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "common"))
+import ig_api  # noqa: E402
 
 API = "https://graph.instagram.com/v23.0"
 # token 統一存放：環境變數 IG_TOKEN 優先，否則讀 數據部/.ig_token（續期由數據部每週一的排程統一處理）
@@ -30,7 +33,7 @@ OK_MARKS = {"ok", "v", "✓", "✔", "y", "yes", "true", "1", "好", "是"}
 def call(method, path, **params):
     params["access_token"] = os.environ["IG_TOKEN"]
     q = urllib.parse.urlencode(params)
-    url = f"{API}/{path}" if path.startswith("http") is False else path
+    url = f"{ig_api.base(os.environ['IG_TOKEN'])}/{path}" if path.startswith("http") is False else path
     req = urllib.request.Request(url + "?" + q) if method == "GET" else \
         urllib.request.Request(url, data=q.encode(), method="POST")
     try:
@@ -54,7 +57,7 @@ def paged(path, **params):
 def fetch(hours, max_posts=20):
     since = dt.datetime.now(dt.timezone.utc) - dt.timedelta(hours=hours)
     out = []
-    for i, m in enumerate(paged("me/media", fields="id,caption,permalink,timestamp,comments_count", limit=25)):
+    for i, m in enumerate(paged(f"{ig_api.uid(os.environ['IG_TOKEN'])}/media", fields="id,caption,permalink,timestamp,comments_count", limit=25)):
         if i >= max_posts:
             break
         if dt.datetime.strptime(m["timestamp"], "%Y-%m-%dT%H:%M:%S%z") < LAUNCH:

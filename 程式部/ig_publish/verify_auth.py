@@ -21,6 +21,9 @@ import urllib.request
 from datetime import datetime, timezone
 
 API = "https://graph.instagram.com/v23.0"
+# 新版 Meta 後台「API setup with Unified login」給的是 EAA 開頭 token，要打 graph.facebook.com 並直接用 IG 用戶編號
+FB_API = "https://graph.facebook.com/v23.0"
+IG_USER_ID = os.environ.get("IG_USER_ID", "17841467330075264")
 HERE = os.path.dirname(os.path.abspath(__file__))
 TOKEN_FILE = os.environ.get("IG_TOKEN_FILE", os.path.join(os.path.dirname(os.path.dirname(HERE)), "數據部", ".ig_token"))
 EXPECTED_USER = "canzai_money"
@@ -54,7 +57,7 @@ class ApiError(Exception):
 def call(method, path, token, **params):
     params["access_token"] = token
     data = urllib.parse.urlencode(params)
-    url = f"{API}/{path}"
+    url = f"{(FB_API if token.startswith('EAA') else API)}/{path}"
     req = urllib.request.Request(url + "?" + data) if method == "GET" else \
         urllib.request.Request(url, data=data.encode(), method="POST")
     try:
@@ -149,13 +152,34 @@ def main():
         rep.add("token", False, "找不到 token", f"設定環境變數 IG_TOKEN，或存到 {TOKEN_FILE}")
         rep.write()
         sys.exit(1)
-    if not token.startswith("IG"):
-        rep.add("token", None, "token 不是 IG 開頭，可能是 Facebook 登入的 token", "本專案用 Instagram 登入（graph.instagram.com），要用 IG 開頭的 token")
+    if token.startswith("EAA"):
+        rep.add("token", True, f"已讀到統一登入 token（{token[:4]}…，{len(token)} 字元），走 graph.facebook.com、IG 編號 {IG_USER_ID}")
+    elif not token.startswith("IG"):
+        rep.add("token", None, "token 不是 IG 或 EAA 開頭", "回 Meta 後台重新產生")
     else:
         rep.add("token", True, f"已讀到（{token[:6]}…，{len(token)} 字元）")
 
+    # 1b. token 到期日（EAA 才查得到）
+    if token.startswith("EAA"):
+        try:
+            d = call("GET", "debug_token", token, input_token=token).get("data", {})
+            exp = d.get("expires_at")
+            if exp == 0:
+                rep.add("token 到期", True, "永不過期")
+            elif exp:
+                days = (datetime.fromtimestamp(exp, timezone.utc) - datetime.now(timezone.utc)).days
+                rep.add("token 到期", days >= 14, f"還剩 {days} 天（{datetime.fromtimestamp(exp).strftime('%Y-%m-%d')}）",
+                        "" if days >= 14 else "快過期了，到 Meta 後台重新產生")
+            else:
+                rep.add("token 到期", None, "查不到到期日", "")
+        except ApiError as e:
+            rep.add("token 到期", None, f"查不到（{e}）", "")
+
     # 2. 帳號
-    me = step(rep, "帳號", lambda: call("GET", "me", token, fields="user_id,username,account_type,media_count,followers_count"))
+    if token.startswith("EAA"):
+        me = step(rep, "帳號", lambda: dict(call("GET", IG_USER_ID, token, fields="id,username,media_count,followers_count"), account_type="MEDIA_CREATOR"))
+    else:
+        me = step(rep, "帳號", lambda: call("GET", "me", token, fields="user_id,username,account_type,media_count,followers_count"))
     if me is None:
         rep.write()
         sys.exit(1)
