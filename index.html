@@ -371,8 +371,8 @@ footer a{color:var(--brand-dark)}
   // endpoint 留空 = 功能關閉：不顯示按鈕、不會有任何網路請求。法務部改好 privacy.html 後再填 Google 表單的 formResponse 網址。
   // 只送分級後的 8 個欄位，不送卡名、確切金額、確切回饋率。按了才送，一個工作階段最多 1 次。
   var SHARE = {
-    endpoint: "", // 例：https://docs.google.com/forms/d/e/<表單ID>/formResponse
-    entry: { mode: "entry.1", cat: "entry.2", amount: "entry.3", cards: "entry.4", gap: "entry.5", capped: "entry.6", negative: "entry.7", month: "entry.8" }
+    endpoint: "https://docs.google.com/forms/d/e/1FAIpQLSeiNrd84IIDGwt_lA43SGLM90JLe-Fj_ALrvIlmv8j8g8s-kA/formResponse",
+    entry: { mode: "entry.693040633", cat: "entry.626058275", amount: "entry.549485841", cards: "entry.1044298631", gap: "entry.487476849", capped: "entry.1303620137", negative: "entry.1754787124", month: "entry.1043384816" }
   };
   var shared = false;
   try { shared = sessionStorage.getItem("canzai-shared") === "1"; } catch (e) { /* 無痕模式等 */ }
