@@ -35,6 +35,7 @@ import ig_api  # noqa: E402  IG 開頭 → graph.instagram.com；EAA 開頭 → 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "factcheck"))
 import factcheck  # noqa: E402  發文當天自動重查官網
 from compliance import check_folder  # noqa: E402  法務部合規檢查（規則每次重新載入）
+from ai_feel_check import check_folder as ai_feel_check  # noqa: E402  品管部去 AI 感檢查
 
 
 def call(method, path, **params):
@@ -162,6 +163,16 @@ def post(folder, base_url, dry=False, force=False, manual=False):
     print(f"文案檢查：{lint['verdict']}")
     if lint["verdict"] == "FAIL" and not force:
         raise SystemExit("文案檢查未通過，修改 caption.txt 後再發（或加 --force）")
+    # 第四關：品管部去 AI 感檢查（FAIL 不發，--force 也不能略過；要放行請在 貼文.md 寫「品管例外：代號（理由）」）
+    qa = ai_feel_check(folder)
+    print(f"去 AI 感檢查：{qa['verdict']}（檢查表版本 {qa['version']}）")
+    for x in qa["fails"]:
+        print(f"  [FAIL] {x}")
+    for x in qa["warns"]:
+        print(f"  [WARN] {x}")
+    if qa["verdict"] == "FAIL":
+        print("⛔ 去 AI 感檢查未通過，不發文。請通知內容部修改（檢查表：品管部/去AI感檢查表.md）。")
+        sys.exit(5)
     # 防重複：IG 上最近 48 小時已經有同一篇（例如罐子用 Metricool 或 App 手動發過）就不發，結束碼 4
     if not dry:
         dup = find_duplicate(caption)
