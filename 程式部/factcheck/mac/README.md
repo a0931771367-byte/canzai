@@ -1,7 +1,7 @@
 # 官網快照：Mac 抓、GitHub 放、雲端比對
 
 **問題：** 雲端環境有網路白名單（蝦皮、國泰、Uber 都被擋），每多一家銀行就要罐子加一次。
-**做法：** 罐子的 Mac 每天 06:30、11:30 用 launchd 抓官網，推到 GitHub repo `a0931771367-byte/canzai` 的 `snapshots` 分支。雲端的 `factcheck.py` 直接抓官網失敗時，就從 raw.githubusercontent.com 讀快照。這個網址雲端本來就連得到。
+**做法：** 罐子的 Mac 每天 00:30、11:30、17:30 用 launchd 抓官網，推到 GitHub repo `a0931771367-byte/canzai` 的 `snapshots` 分支。雲端的 `factcheck.py` 直接抓官網失敗時，就從 raw.githubusercontent.com 讀快照。這個網址雲端本來就連得到。
 **結果：** 罐子**一次白名單都不用加**。新增銀行時，雲端用 `--urls-out` 更新 urls.txt 並推上去，Mac 下一輪就會抓。
 
 ## 罐子要做的（一次）
@@ -22,3 +22,10 @@
 - Mac 紀錄：`~/Library/Logs/canzai-snapshots.log`
 - 手動跑一次：`python3 ~/Library/Application\ Support/canzai/fetch_snapshots.py`
 - 停用：`launchctl unload ~/Library/LaunchAgents/money.canzai.snapshots.plist`
+
+## 抓取時段為什麼是 00:30、11:30、17:30（11/4 調整）
+- 00:30：新活動常在活動首日 00:00 生效（尤其每月 1 日、每季首日 1/1、4/1、7/1、10/1），半夜抓一次就能抓到「今天開始」的版本
+- 11:30：銀行網站的公告多半是上班時間更新（上午 9～11 點最常見），而且這次剛好在 12:00 發文前 30 分鐘
+- 17:30：補抓下午的更新，也在 20:00 發文前
+- 對不利持卡人的條件變更，銀行依規定要提前通知（一般是 60 天前），所以權益調整不會當天突然生效，一天三次就夠了
+- 以上是一般規律，不是實測。fetch_snapshots.py 會在 changes.log 記下每個頁面實際改版的時間，累積 3～4 週後再依實際數據調整

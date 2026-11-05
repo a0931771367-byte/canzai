@@ -1,0 +1,28 @@
+# 放到 canzai repo 的 .github/workflows/verify.yml
+# 驗證 IG_TOKEN 能不能用：合併到 main 時自動跑一次，也可以在 Actions 頁面按「Run workflow」手動跑。
+# 只讀不寫：不發文、不回覆。結果看這次執行的紀錄（全綠＝可以發文）。
+name: 驗證 IG 授權
+on:
+  push:
+    branches: [main]
+    paths: [".github/workflows/verify.yml", "程式部/ig_publish/verify_auth.py", "程式部/common/ig_api.py"]
+  pull_request:
+    paths: [".github/workflows/verify.yml", "程式部/ig_publish/verify_auth.py", "程式部/common/ig_api.py"]
+  workflow_dispatch: {}
+permissions: { contents: read }
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      IG_TOKEN: ${{ secrets.IG_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - name: 驗證
+        run: |
+          if [ -z "$IG_TOKEN" ]; then echo "::error::repo 裡找不到 IG_TOKEN secret（名稱要完全一樣，大寫）"; exit 1; fi
+          rc=0; python3 程式部/ig_publish/verify_auth.py || rc=$?
+          cat 程式部/ig_publish/授權驗證報告_*.md >> "$GITHUB_STEP_SUMMARY" 2>/dev/null || true
+          exit $rc

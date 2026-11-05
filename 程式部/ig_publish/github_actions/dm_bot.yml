@@ -1,0 +1,49 @@
+# 放到 canzai repo 的 .github/workflows/dm_bot.yml
+# 「選卡」自動回覆：排程每 5 分鐘（GitHub 實際常延遲，可能 10 分鐘到數小時一次）跑 dm_bot.py。
+# 隱私（法務部 11/5 審查）：帳號名稱、訊息只寫進罐子的 Google 試算表；這裡的去重狀態只有 HMAC 雜湊編號和時間，
+# 存在 Actions cache（不進 git、不能公開下載，7 天沒用到 GitHub 會自己清掉），程式每輪也會刪 90 天前的紀錄。
+# 公開 repo 的執行紀錄任何人都看得到：這裡不要加 --dry-run 或 --dump（會印出內容），程式只印雜湊前 8 碼和錯誤碼。
+# 需要 secrets：IG_TOKEN、CANZAI_BOT_KEY、CANZAI_SHEET_URL。沒設定就略過。連續 3 次錯誤會讓 job 失敗，GitHub 寄信通知。
+name: 選卡自動回覆
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+    inputs:
+      reset_errors: { description: "連續錯誤歸零（修好問題後勾這個再跑）", type: boolean, default: false }
+concurrency: { group: dm-bot, cancel-in-progress: false }
+permissions: { contents: read }
+jobs:
+  dm:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      IG_TOKEN: ${{ secrets.IG_TOKEN }}
+      CANZAI_BOT_KEY: ${{ secrets.CANZAI_BOT_KEY }}
+      CANZAI_SHEET_URL: ${{ secrets.CANZAI_SHEET_URL }}
+      CANZAI_STATE_FILE: ${{ github.workspace }}/.dm_state/state.json
+    steps:
+      - name: 檢查 secrets
+        id: chk
+        run: |
+          if [ -z "$IG_TOKEN" ] || [ -z "$CANZAI_BOT_KEY" ] || [ -z "$CANZAI_SHEET_URL" ]; then
+            echo "還沒設定 IG_TOKEN、CANZAI_BOT_KEY、CANZAI_SHEET_URL 其中之一，略過"; echo "skip=1" >> "$GITHUB_OUTPUT"; fi
+      - uses: actions/checkout@v4
+        if: steps.chk.outputs.skip != '1'
+      - uses: actions/setup-python@v5
+        if: steps.chk.outputs.skip != '1'
+        with: { python-version: "3.12" }
+      - name: 取回上一輪狀態
+        if: steps.chk.outputs.skip != '1'
+        uses: actions/cache/restore@v4
+        with: { path: .dm_state, key: "dm-state-${{ github.run_id }}", restore-keys: "dm-state-" }
+      - name: 錯誤歸零
+        if: steps.chk.outputs.skip != '1' && inputs.reset_errors
+        run: python3 程式部/comments/dm_bot.py --reset-errors
+      - name: 跑選卡回覆
+        if: steps.chk.outputs.skip != '1'
+        run: python3 程式部/comments/dm_bot.py
+      - name: 存狀態給下一輪
+        if: always() && steps.chk.outputs.skip != '1' && hashFiles('.dm_state/state.json') != ''
+        uses: actions/cache/save@v4
+        with: { path: .dm_state, key: "dm-state-${{ github.run_id }}-${{ github.run_attempt }}" }

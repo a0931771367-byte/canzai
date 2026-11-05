@@ -176,6 +176,12 @@ def main():
             save_ledger(led)
             if pid == "00":
                 todo("00 自介已發，請到 IG App 手動置頂（API 不能置頂）")
+        elif r.returncode == 4:  # IG 上已經有（手動或 Metricool 發過），記成已發，不再重試
+            mid = (re.findall(r"貼文 ID：\s*(\d+)", r.stdout) or [""])[-1]
+            led[pid] = {"published_at": dt.datetime.now(TZ).isoformat(timespec="minutes"), "media_id": mid,
+                        "how": "已在 IG（手動或 Metricool）"}
+            save_ledger(led)
+            todo(f"{pid}「{title}」IG 上已經有了（可能是手動或 Metricool 發的），排程沒有重發")
         else:
             why = {2: "官網重查擋下（看資料夾裡的 查證報告.md）", 1: "合規或文案檢查沒過"}.get(r.returncode, "發文失敗")
             todo(f"{pid}「{title}」{why}，結束碼 {r.returncode}。修好後 2 小時內排程會自動重試")

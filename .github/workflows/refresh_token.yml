@@ -1,5 +1,5 @@
 # 放到 canzai repo 的 .github/workflows/refresh_token.yml
-# IG 長效 token 60 天到期：每週一台灣 07:07 續期一次，並把新 token 寫回 repo secret IG_TOKEN。
+# IG 長效 token：每週一台灣 07:07 檢查。IG 開頭的續期並寫回 secret；EAA 開頭（統一登入）只檢查到期日，剩不到 14 天就失敗寄信。
 # Actions 預設的 GITHUB_TOKEN 不能改 secret，所以要罐子建一次「fine-grained personal access token」：
 #   只授權 canzai 這個 repo，權限 Secrets: Read and write，存成 repo secret GH_SECRETS_PAT（免費）。
 # 續期失敗（token 已過期）時 job 失敗、GitHub 寄信，要罐子重新授權一次。
@@ -20,6 +20,16 @@ jobs:
         run: |
           set -euo pipefail
           if [ -z "$IG_TOKEN" ] || [ -z "$GH_TOKEN" ]; then echo "還沒設定 IG_TOKEN 或 GH_SECRETS_PAT，略過"; exit 0; fi
+          if [[ "$IG_TOKEN" == EAA* ]]; then
+            # 統一登入（EAA）token 不能用 ig_refresh_token 續期，只檢查到期日；剩不到 14 天就讓 job 失敗，GitHub 會寄信提醒罐子重新產生
+            exp=$(curl -sfS "https://graph.facebook.com/v23.0/debug_token?input_token=${IG_TOKEN}&access_token=${IG_TOKEN}" | python3 -c 'import sys,json;print(json.load(sys.stdin).get("data",{}).get("expires_at",-1))')
+            if [ "$exp" = "0" ]; then echo "token 永不過期"; exit 0; fi
+            if [ "$exp" = "-1" ]; then echo "::warning::查不到 token 到期日"; exit 0; fi
+            days=$(( (exp - $(date +%s)) / 86400 ))
+            echo "token 還剩 ${days} 天"
+            if [ "$days" -lt 14 ]; then echo "::error::IG token 只剩 ${days} 天，請到 Meta 後台重新產生並更新 secret IG_TOKEN"; exit 1; fi
+            exit 0
+          fi
           res=$(curl -sfS "https://graph.instagram.com/refresh_access_token?grant_type=ig_refresh_token&access_token=${IG_TOKEN}")
           new=$(echo "$res" | python3 -c 'import sys,json;print(json.load(sys.stdin)["access_token"])')
           days=$(echo "$res" | python3 -c 'import sys,json;print(json.load(sys.stdin)["expires_in"]//86400)')

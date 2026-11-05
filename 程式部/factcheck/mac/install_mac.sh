@@ -1,6 +1,6 @@
 #!/bin/bash
 # 在罐子的 Mac 上跑一次就好：bash install_mac.sh
-# 做三件事：clone 快照分支到 ~/canzai-snapshots、放好抓取程式、設定 launchd 每天 06:30 和 11:30 自動跑。
+# 做三件事：clone 快照分支到 ~/canzai-snapshots、放好抓取程式、設定 launchd 每天 00:30、11:30、17:30 自動跑。
 # 需要：Mac 已經能用 git 推到 github.com/a0931771367-byte/canzai（GitHub Desktop 或 gh auth login 登入過就可以）。
 set -e
 REPO_URL="${1:-https://github.com/a0931771367-byte/canzai.git}"
@@ -36,8 +36,9 @@ cat > "$PLIST" <<PL
     <string>$HOME/Library/Application Support/canzai/fetch_snapshots.py</string>
   </array>
   <key>StartCalendarInterval</key><array>
-    <dict><key>Hour</key><integer>6</integer><key>Minute</key><integer>30</integer></dict>
+    <dict><key>Hour</key><integer>0</integer><key>Minute</key><integer>30</integer></dict>
     <dict><key>Hour</key><integer>11</integer><key>Minute</key><integer>30</integer></dict>
+    <dict><key>Hour</key><integer>17</integer><key>Minute</key><integer>30</integer></dict>
   </array>
   <key>StandardOutPath</key><string>$HOME/Library/Logs/canzai-snapshots.log</string>
   <key>StandardErrorPath</key><string>$HOME/Library/Logs/canzai-snapshots.log</string>
@@ -47,4 +48,4 @@ launchctl unload "$PLIST" 2>/dev/null || true
 launchctl load "$PLIST"
 echo "裝好了。現在先跑一次測試："
 /usr/bin/python3 "$HOME/Library/Application Support/canzai/fetch_snapshots.py"
-echo "之後每天 06:30、11:30 自動跑（Mac 睡眠時會在醒來後補跑），紀錄在 ~/Library/Logs/canzai-snapshots.log"
+echo "之後每天 00:30、11:30、17:30 自動跑（Mac 睡眠時會在醒來後補跑），紀錄在 ~/Library/Logs/canzai-snapshots.log"

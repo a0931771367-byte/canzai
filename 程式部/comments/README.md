@@ -51,3 +51,12 @@ IG_TOKEN=... python3 ig_comments.py send out/留言回覆待審.json [--dry-run]
 
 ## 上線日界線（2026-11-03 社群部要求）
 只抓 2026-11-04 01:00（00 自介實際發文時間）之後發的貼文的留言。舊帳號（@air_pudding 時期）的貼文就算沒封存，留言也不會抓、不會自動回覆；送出時也會再擋一次。要調整界線就設環境變數 `CANZAI_LAUNCH`。
+
+## 選卡自動回覆（dm_bot.py，法務部 11/5 審查後版本）
+
+- GitHub Actions「選卡自動回覆」排程跑 `dm_bot.py`：留言「選卡」→ 公開回覆＋私訊第一則；私訊「選卡／配卡」→ 第一則；其他私訊 → 寫進試算表；試算表勾「核准」的回覆 → 送出。
+- 帳號名稱、訊息只在罐子的 Google 試算表「罐仔私訊」（分頁：選卡待回覆、私訊待處理），試算表每天 03:00 自動刪 90 天前的列。
+- 去重狀態只有 HMAC-SHA256（鹽值由 CANZAI_BOT_KEY 衍生）後的編號和時間，放 Actions cache，不進 git。
+- 試算表那端是 `試算表_AppsScript.gs`（Apps Script 網頁應用程式），用 CANZAI_BOT_KEY 驗證呼叫者。
+- 需要的 repo secrets：IG_TOKEN、CANZAI_BOT_KEY（setup 產生）、CANZAI_SHEET_URL（部署網址）。
+- 雲端 Claude 起草回覆：用 Google 試算表工具讀「選卡待回覆」，把草稿填進「罐仔回覆草稿」欄，罐子勾「核准」才會送。
