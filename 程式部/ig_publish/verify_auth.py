@@ -138,6 +138,28 @@ def check_image_url(url):
     return problems, f"{ctype}，{len(body) // 1024}KB，{size}"
 
 
+
+def token_shape(t):
+    """不洩漏內容，只描述 token 長什麼樣，幫忙判斷貼錯了什麼（公開 repo 的執行紀錄別人看得到）。"""
+    import re as _re
+    hints = [f"{len(t)} 字元"]
+    if t != t.strip():
+        hints.append("前後有空白或換行")
+    s = t.strip()
+    if s[:1] in "\"'「":
+        hints.append("前面有引號")
+    if "=" in s or ":" in s:
+        hints.append("裡面有 = 或 :（可能把「名稱=」也貼進去了）")
+    if " " in s:
+        hints.append("中間有空白")
+    if s.isdigit():
+        hints.append("全是數字，看起來像 App ID 或帳號編號，不是 token")
+    elif _re.fullmatch(r"[0-9a-f]{32}", s):
+        hints.append("32 碼英數，看起來像 App 密鑰（App Secret），不是 token")
+    elif len(s) < 100:
+        hints.append("太短，長效 token 通常 150 字元以上")
+    return "、".join(hints)
+
 def main():
     ap = argparse.ArgumentParser(description="IG 授權後一鍵驗證")
     ap.add_argument("--story", metavar="URL", help="測試限動用的公開 JPEG 網址")
@@ -155,7 +177,7 @@ def main():
     if token.startswith("EAA"):
         rep.add("token", True, f"已讀到統一登入 token（{token[:4]}…，{len(token)} 字元），走 graph.facebook.com、IG 編號 {IG_USER_ID}")
     elif not token.startswith("IG"):
-        rep.add("token", None, "token 不是 IG 或 EAA 開頭", "回 Meta 後台重新產生")
+        rep.add("token", None, "token 不是 IG 或 EAA 開頭：" + token_shape(token), "回 Meta 後台重新產生，只貼 EAA 或 IG 開頭那一長串，前後不要有空白、引號或「IG_TOKEN=」")
     else:
         rep.add("token", True, f"已讀到（{token[:6]}…，{len(token)} 字元）")
 
