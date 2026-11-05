@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src data:; style-src 'unsafe-inline'; script-src 'unsafe-inline'; connect-src 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src data:; style-src 'unsafe-inline'; script-src 'unsafe-inline'; connect-src https://docs.google.com; form-action 'none'">
 <meta name="referrer" content="no-referrer">
 <title>罐仔刷卡試算器</title>
 <style>
@@ -76,6 +76,8 @@ footer ol{margin:4px 0;padding-left:22px}
 footer a{color:var(--brand-dark)}
 .short{font-size:13px;color:var(--text);background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin:0 0 4px}
 .fine{font-size:13px;color:var(--sub);margin:6px 0 0}
+.share{margin-top:12px;padding-top:10px;border-top:1px dashed var(--line)}
+.share button{margin-top:6px}
 .sr{position:absolute;left:-9999px}
 @media (max-width:640px){
   .cardhead{grid-template-columns:1fr 1fr}
@@ -265,7 +267,7 @@ footer a{color:var(--brand-dark)}
       }
       var feeAmt = amount * fee;
       if (fee) why += "，扣手續費 " + num(c.fee) + "%（" + money(feeAmt) + "）";
-      return { name: cardName(c, i), net: reward - feeAmt, why: why };
+      return { name: cardName(c, i), net: reward - feeAmt, why: why, i: i };
     }).sort(function (a, b) { return b.net - a.net; });
   }
 
@@ -322,6 +324,7 @@ footer a{color:var(--brand-dark)}
     out.insertBefore(el("p", { style: "margin:0 0 8px;font-weight:700", text: "這筆刷 " + top.name + " 回饋最多（依你的輸入）" }), out.firstChild);
     out.appendChild(el("p", { class: "hint", style: "margin-top:6px", text: "假設這個月的加碼額度還沒用掉。已經刷了一些的話，實際回饋可能比較少。" }));
     out.appendChild(el("p", { class: "fine", text: "依你輸入的條件試算・實際以銀行公告為準" }));
+    shareBox(out, function () { return shareOne(amt, cat); });
   }
 
   // ---------- 3. 每月 ----------
@@ -361,6 +364,62 @@ footer a{color:var(--brand-dark)}
       out.appendChild(el("div", { class: "warn", text: "有卡片刷到加碼上限，超過的部分已經自動換到下一張卡。" }));
     }
     out.appendChild(el("p", { class: "fine", text: "依你輸入的條件試算・實際以銀行公告為準" }));
+    shareBox(out, shareMonth);
+  }
+
+  // ---------- 匿名分享（產品部「使用資料累積評估」做法 2）----------
+  // endpoint 留空 = 功能關閉：不顯示按鈕、不會有任何網路請求。法務部改好 privacy.html 後再填 Google 表單的 formResponse 網址。
+  // 只送分級後的 8 個欄位，不送卡名、確切金額、確切回饋率。按了才送，一個工作階段最多 1 次。
+  var SHARE = {
+    endpoint: "", // 例：https://docs.google.com/forms/d/e/<表單ID>/formResponse
+    entry: { mode: "entry.1", cat: "entry.2", amount: "entry.3", cards: "entry.4", gap: "entry.5", capped: "entry.6", negative: "entry.7", month: "entry.8" }
+  };
+  var shared = false;
+  try { shared = sessionStorage.getItem("canzai-shared") === "1"; } catch (e) { /* 無痕模式等 */ }
+  function bucket(v, edges, labels) { for (var i = 0; i < edges.length; i++) if (v < edges[i]) return labels[i]; return labels[labels.length - 1]; }
+  function amtBucket(a) { return bucket(a, [1000, 3000, 10000, 30000], ["<1千", "1千～3千", "3千～1萬", "1萬～3萬", "3萬以上"]); }
+  function cardBucket(n) { return n >= 6 ? "6 張以上" : n >= 4 ? "4～5" : String(n); }
+  function gapBucket(pct) { return bucket(pct, [0.5, 1, 2, 3], ["0～0.5%", "0.5～1%", "1～2%", "2～3%", "3% 以上"]); }
+  function ym() { var d = new Date(); return d.getFullYear() + "-" + ("0" + (d.getMonth() + 1)).slice(-2); }
+  function shareOne(amt, cat) {
+    var r = single(amt, cat);
+    return { mode: "單筆", cat: cat, amount: amtBucket(amt), cards: cardBucket(state.cards.length),
+      gap: gapBucket((r[0].net - r[r.length - 1].net) / amt * 100),
+      capped: r.some(function (x) { return x.why.indexOf("刷到上限") >= 0; }) ? "是" : "否",
+      negative: r.some(function (x) { return x.net < 0; }) ? "是" : "否", month: ym() };
+  }
+  function shareMonth() {
+    var total = 0, top = null, perCard = state.cards.map(function () { return 0; }), neg = false;
+    CATS.forEach(function (k) {
+      var a = num(state.spend[k]); if (!a) return;
+      total += a; if (!top || a > num(state.spend[top])) top = k;
+      single(a, k).forEach(function (x) { if (x.net < 0) neg = true; perCard[x.i] += x.net; });
+    });
+    var alloc = monthly(state.spend), got = alloc.reduce(function (s, x) { return s + x.reward; }, 0);
+    return { mode: "每月", cat: top, amount: amtBucket(total), cards: cardBucket(state.cards.length),
+      gap: gapBucket((got - Math.min.apply(null, perCard)) / total * 100),
+      capped: alloc.some(function (x) { return x.kind.indexOf("刷到上限") >= 0; }) ? "是" : "否",
+      negative: neg ? "是" : "否", month: ym() };
+  }
+  function shareBox(out, build) {
+    if (!SHARE.endpoint) return; // 功能關閉
+    var box = el("div", { class: "share" });
+    if (shared) { box.appendChild(el("p", { class: "fine", text: "這次已經分享過了，謝謝你！" })); out.appendChild(box); return; }
+    var btn = el("button", { class: "btn-ghost", type: "button", text: "把這筆結果匿名分享給罐仔做研究" });
+    box.appendChild(el("p", { class: "fine", text: "不含卡名與確切金額，只送分級後的資料（例如「1千～3千」）。按了才會送出，每次開啟頁面最多一次。詳見隱私說明。" }));
+    box.appendChild(btn);
+    btn.addEventListener("click", function () {
+      if (shared) return;
+      var f = build(), body = new URLSearchParams();
+      Object.keys(SHARE.entry).forEach(function (k) { body.append(SHARE.entry[k], f[k]); });
+      shared = true;
+      try { sessionStorage.setItem("canzai-shared", "1"); } catch (e) { /* 忽略 */ }
+      btn.disabled = true; btn.textContent = "送出中…";
+      fetch(SHARE.endpoint, { method: "POST", mode: "no-cors", body: body, credentials: "omit", referrerPolicy: "no-referrer" })
+        .then(function () { btn.textContent = "已匿名分享，謝謝你！"; })
+        .catch(function () { btn.textContent = "沒有送出（網路問題），不影響試算"; });
+    });
+    out.appendChild(box);
   }
 
   // ---------- 4. 備份 ----------
@@ -434,7 +493,7 @@ footer a{color:var(--brand-dark)}
     else { try { localStorage.removeItem(KEY); } catch (e) { /* 忽略 */ } msg("已不再記住，這台裝置裡存的卡片已刪除。"); }
   });
   renderAll();
-  window.__calc = { single: single, monthly: monthly, state: function () { return state; } }; // 測試用
+  window.__calc = { single: single, monthly: monthly, state: function () { return state; }, SHARE: SHARE, shareOne: shareOne, shareMonth: shareMonth, rerender: function () { renderAll(); } }; // 測試用
 })();
 </script>
 </body>
