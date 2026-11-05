@@ -1,3 +1,4 @@
 程式部/factcheck/snapshots/
 __pycache__/
 *.pyc
+.dm_state/

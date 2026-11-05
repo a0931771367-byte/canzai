@@ -4,21 +4,25 @@
 每輪做三件事：
   ① 最近 10 篇貼文的新留言含「選卡」→ 公開回覆（3 種輪替）＋留言私訊第一則
   ② 新私訊：「選卡／幫我選卡／配卡」→ 私訊第一則（24 小時內同一人只送一次）；
-     已送過第一則的人回的話 → 存「選卡待回覆」；其他 → 存「私訊待處理」
-  ③ 送出 outbox 裡罐子核准過的回覆（雲端 Claude 每天 12:00、21:00 起草，核准後放進 outbox）
+     已送過第一則的人回的話 → 寫進試算表「選卡待回覆」；其他 → 寫進「私訊待處理」
+  ③ 試算表裡罐子勾了「核准」的回覆 → 送出，並在「送出狀態」寫上時間
+     （雲端 Claude 每天 12:00、21:00 在試算表填「罐仔回覆草稿」，罐子看過勾核准）
 
-狀態（處理過的留言、送過的人、待回覆、outbox）存在 state/dm_state.enc：
-  repo 是公開的，所以整份用 CANZAI_STATE_KEY 加密（Fernet）後才 commit。金鑰只放在 repo secret 和專案庫。
+資料放哪（法務部 11/5 審查）：
+  帳號名稱、訊息內容 → 只在罐子的 Google 試算表（每天自動刪 90 天前的列）
+  去重狀態 → 只有 HMAC 雜湊過的編號和時間，存在 .dm_state/state.json，由 Actions cache 帶到下一輪，不進 git
 
     python3 dm_bot.py               # 正式跑
     python3 dm_bot.py --dry-run     # 只印出會做什麼，不送、不寫狀態
-    python3 dm_bot.py --dump        # 解密印出狀態（雲端起草用）
+    python3 dm_bot.py --dump        # 印出狀態（只有雜湊值和時間）
 
-環境變數：IG_TOKEN（EAA 或 IG 開頭）、CANZAI_STATE_KEY、IG_USER_ID（選填）、IG_PAGE_ID（選填，留言私訊要用 Page 端點時才填）
+環境變數：IG_TOKEN（EAA 或 IG 開頭）、CANZAI_BOT_KEY、CANZAI_SHEET_URL、IG_USER_ID（選填）、IG_PAGE_ID（選填）
 防呆：一則留言只私訊一次；同一人 24 小時一次；略過自己；每輪最多 30 則；個資遮蔽；90 天刪除；連續 3 次 API 錯誤就停。
 """
 import argparse
 import datetime as dt
+import hashlib
+import hmac
 import json
 import os
 import re
@@ -31,7 +35,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(os.path.dirname(HERE), "common"))
 import ig_api  # noqa: E402
 
-STATE_FILE = os.environ.get("CANZAI_STATE_FILE", os.path.join(os.path.dirname(os.path.dirname(HERE)), "state", "dm_state.enc"))
+STATE_FILE = os.environ.get("CANZAI_STATE_FILE", os.path.join(os.path.dirname(os.path.dirname(HERE)), ".dm_state", "state.json"))
 TZ = dt.timezone(dt.timedelta(hours=8))
 LAUNCH = dt.datetime.fromisoformat(os.environ.get("CANZAI_LAUNCH", "2026-11-04T01:00:00+08:00"))
 ME = "canzai_money"
@@ -58,35 +62,32 @@ def mask(t):
     return t2, t2 != (t or "")
 
 
-# ---------------------------------------------------------------- 狀態（加密）
-def fernet():
-    from cryptography.fernet import Fernet
-    key = os.environ.get("CANZAI_STATE_KEY")
-    if not key:
-        sys.exit("缺少 CANZAI_STATE_KEY（狀態加密金鑰）")
-    return Fernet(key.encode())
+# ---------------------------------------------------------------- 狀態（只有雜湊值，不進 git）
+# 法務部《私訊狀態檔審查_2026-11-05》：去重狀態只存 HMAC-SHA256（秘密鹽值）後的編號和時間，
+# 放在 GitHub Actions cache（不進 git、不公開下載）。帳號名稱和訊息內容只寫進罐子的 Google 試算表。
+def _key():
+    k = os.environ.get("CANZAI_BOT_KEY")
+    if not k:
+        sys.exit("缺少 CANZAI_BOT_KEY（試算表的 setup 會產生，貼到 repo secret）")
+    return k.encode()
 
 
-_LOADED = None  # 讀進來時的內容，沒變就不重寫（Fernet 每次加密結果都不同，避免每 5 分鐘一個 commit）
+def h(x):
+    """編號 → HMAC-SHA256（鹽值由 CANZAI_BOT_KEY 衍生），只留前 32 碼，認不回原本是誰。"""
+    salt = hmac.new(_key(), b"canzai-id-salt", hashlib.sha256).digest()
+    return hmac.new(salt, str(x).encode(), hashlib.sha256).hexdigest()[:32]
 
 
 def load_state():
-    empty = {"comments": {}, "people": {}, "pending_card": [], "pending_other": [], "outbox": [], "errors": 0,
-             "public_used": {}, "seen_msgs": {}}
+    empty = {"comments": {}, "people": {}, "errors": 0, "public_used": {}, "seen_msgs": {}}
     if not os.path.exists(STATE_FILE):
         return empty
-    global _LOADED
-    data = json.loads(fernet().decrypt(open(STATE_FILE, "rb").read()))
-    st = {**empty, **data}
-    _LOADED = json.dumps(st, ensure_ascii=False, sort_keys=True)
-    return st
+    return {**empty, **json.load(open(STATE_FILE, encoding="utf-8"))}
 
 
 def save_state(st):
-    if _LOADED == json.dumps(st, ensure_ascii=False, sort_keys=True):
-        return
     os.makedirs(os.path.dirname(STATE_FILE), exist_ok=True)
-    open(STATE_FILE, "wb").write(fernet().encrypt(json.dumps(st, ensure_ascii=False).encode()))
+    json.dump(st, open(STATE_FILE, "w", encoding="utf-8"))
 
 
 def purge(st, now):
@@ -94,8 +95,33 @@ def purge(st, now):
     st["comments"] = {k: v for k, v in st["comments"].items() if v >= cut}
     st["seen_msgs"] = {k: v for k, v in st["seen_msgs"].items() if v >= cut}
     st["people"] = {k: v for k, v in st["people"].items() if v.get("last", "") >= cut}
-    for q in ("pending_card", "pending_other", "outbox"):
-        st[q] = [x for x in st[q] if x.get("time", "") >= cut]
+
+
+# ---------------------------------------------------------------- 試算表（Apps Script 網頁應用程式）
+class Sheet:
+    """罐子的「罐仔私訊」試算表。帳號名稱、訊息只存在這裡；90 天前的資料由試算表每天自動刪。"""
+
+    def __init__(self, dry):
+        self.url, self.dry = os.environ.get("CANZAI_SHEET_URL", ""), dry
+        if not self.url and not dry:
+            sys.exit("缺少 CANZAI_SHEET_URL（試算表 Apps Script 部署後的網址）")
+
+    def call(self, action, **body):
+        if self.dry and action != "outbox":
+            print(f"[dry-run] 試算表 {action}：{json.dumps(body, ensure_ascii=False)[:80]}")
+            return {"ok": True}
+        if not self.url:
+            return {"ok": True, "items": [], "late": 0}
+        data = json.dumps({"key": _key().decode(), "action": action, **body}, ensure_ascii=False).encode()
+        req = urllib.request.Request(self.url, data=data, headers={"Content-Type": "application/json"})
+        try:
+            with urllib.request.urlopen(req, timeout=30) as r:
+                out = json.load(r)
+        except (urllib.error.URLError, ValueError) as e:
+            raise RuntimeError(f"試算表 {action} 失敗：{e}")
+        if not out.get("ok"):
+            raise RuntimeError(f"試算表 {action} 回錯誤：{out.get('error')}")
+        return out
 
 
 # ---------------------------------------------------------------- API
@@ -141,20 +167,23 @@ class Api:
 
 # ---------------------------------------------------------------- 主流程
 def recent(ts_iso, now, hours=24):
-    return ts_iso and (now - dt.datetime.fromisoformat(ts_iso)) < dt.timedelta(hours=hours)
+    if not ts_iso:
+        return False
+    t = dt.datetime.fromisoformat(re.sub(r"([+-]\d\d)(\d\d)$", r"\1:\2", str(ts_iso).replace("Z", "+00:00")))
+    return (now - t) < dt.timedelta(hours=hours)
 
 
-def handle_comments(api, st, now):
+def handle_comments(api, st, sheet, now):
     media = api.call("GET", f"{api.uid}/media", fields="id,timestamp", limit=10).get("data", [])
     for m in media:
         if dt.datetime.strptime(m["timestamp"], "%Y-%m-%dT%H:%M:%S%z") < LAUNCH:
             continue
         cs = api.call("GET", f"{m['id']}/comments", fields="id,text,username,timestamp,from", limit=50).get("data", [])
         for c in cs:
-            if c["id"] in st["comments"] or c.get("username") == ME or not KEYWORD_COMMENT.search(c.get("text", "")):
+            ck = h(c["id"])
+            if ck in st["comments"] or c.get("username") == ME or not KEYWORD_COMMENT.search(c.get("text", "")):
                 continue
-            who = (c.get("from") or {}).get("id") or c.get("username", "")
-            person = st["people"].setdefault(who, {})
+            person = st["people"].setdefault(h((c.get("from") or {}).get("id") or c.get("username", "")), {})
             used = st["public_used"].setdefault(m["id"], {})
             pick = min(PUBLIC, key=lambda p: used.get(p, 0))
             if used.get(pick, 0) < 3:
@@ -162,57 +191,58 @@ def handle_comments(api, st, now):
                     return
                 used[pick] = used.get(pick, 0) + 1
             if recent(person.get("first_dm"), now):
-                print(f"略過私訊：{c.get('username')} 24 小時內已收過第一則")
+                print("略過私訊：這個人 24 小時內已收過第一則")
             else:
                 if api.private_reply(c["id"]) is None:
                     return
-                person.update(first_dm=now.isoformat(), username=c.get("username", ""), via="留言")
+                person["first_dm"] = now.isoformat()
             person["last"] = now.isoformat()
-            st["comments"][c["id"]] = now.isoformat()
+            st["comments"][ck] = now.isoformat()
 
 
-def handle_dms(api, st, now):
+def handle_dms(api, st, sheet, now):
     node = api.messages_node()
     convs = api.call("GET", f"{node}/conversations", platform="instagram",
                      fields="id,updated_time,messages.limit(5){id,message,from,created_time}", limit=20).get("data", [])
     for cv in convs:
         for msg in reversed((cv.get("messages") or {}).get("data", [])):
-            mid, frm = msg["id"], msg.get("from") or {}
-            if mid in st["seen_msgs"]:
+            mk, frm = h(msg["id"]), msg.get("from") or {}
+            if mk in st["seen_msgs"]:
                 continue
-            st["seen_msgs"][mid] = now.isoformat()
             if frm.get("username") == ME or frm.get("id") == api.uid:
+                st["seen_msgs"][mk] = now.isoformat()
                 continue
             who, text = frm.get("id", ""), msg.get("message", "")
-            person = st["people"].setdefault(who, {})
-            person["last"] = now.isoformat()
-            safe, masked = mask(text)
-            item = {"time": msg.get("created_time") or now.isoformat(), "igsid": who, "username": frm.get("username", ""),
-                    "text": safe, "masked": masked, "conversation": cv.get("id")}
+            person = st["people"].setdefault(h(who), {})
             if KEYWORD_DM.search(text) and len(text) <= 12:
                 if recent(person.get("first_dm"), now):
-                    print(f"略過：{frm.get('username')} 24 小時內已收過第一則")
-                    continue
-                if api.dm(who, FIRST_DM) is None:
-                    return
-                person.update(first_dm=now.isoformat(), username=frm.get("username", ""), via="私訊")
-            elif person.get("first_dm"):
-                st["pending_card"].append(item)
+                    print("略過：這個人 24 小時內已收過第一則")
+                else:
+                    if api.dm(who, FIRST_DM) is None:
+                        return
+                    person["first_dm"] = now.isoformat()
             else:
-                st["pending_other"].append(item)
+                safe, masked = mask(text)
+                tab = "選卡待回覆" if person.get("first_dm") else "私訊待處理"
+                # 先寫進試算表，成功才記成已處理；寫失敗下一輪會再試，不會漏
+                sheet.call("append", tab=tab, row=[msg.get("created_time") or now.isoformat(), frm.get("username", ""),
+                                                   who, safe, "是" if masked else ""])
+                print(f"→ 試算表「{tab}」多一則")
+            person["last"] = now.isoformat()
+            st["seen_msgs"][mk] = now.isoformat()
 
 
-def send_outbox(api, st, now):
-    for o in st["outbox"]:
-        if o.get("sent") or not o.get("approved"):
-            continue
-        last = o.get("their_last") or o.get("time")
-        if last and not recent(last, now, 24):
-            o["sent"] = "過期（超過 24 小時，不能回）"
+def send_outbox(api, st, sheet, now):
+    out = sheet.call("outbox")
+    for o in out.get("items", []):
+        if not recent(o.get("time"), now, 24):
+            sheet.call("mark", tab=o["tab"], row=o["row"], value="過期（超過 24 小時，IG 不給回）")
             continue
         if api.dm(o["igsid"], o["text"]) is None:
             return
-        o["sent"] = now.isoformat()
+        sheet.call("mark", tab=o["tab"], row=o["row"], value=("（模擬）" if api.dry else "") + now.isoformat(timespec="minutes"))
+    if out.get("late"):
+        print(f"⚠️ 有 {out['late']} 則選卡回覆收到超過 20 小時還沒核准（24 小時後就不能回）")
 
 
 def main():
@@ -235,25 +265,21 @@ def main():
         print("還沒設定 IG_TOKEN，略過")
         return
     if st.get("errors", 0) >= 3 and not a.dry_run:
-        sys.exit("⛔ 已連續 3 次 API 錯誤，暫停中。修好後把狀態的 errors 歸零（python3 dm_bot.py --reset-errors）")
+        sys.exit("⛔ 已連續 3 次錯誤，暫停中。修好後到 Actions 手動跑「選卡自動回覆」並勾 reset_errors")
     now = dt.datetime.now(TZ)
-    api = Api(token, a.dry_run)
+    api, sheet = Api(token, a.dry_run), Sheet(a.dry_run)
     ok = True
     for step in (handle_comments, handle_dms, send_outbox):
         try:
-            step(api, st, now)
+            step(api, st, sheet, now)
         except RuntimeError as e:
             ok = False
             print(f"❌ {step.__name__}：{e}")
     st["errors"] = 0 if ok else st.get("errors", 0) + 1
-    late = [p for p in st["pending_card"] if not p.get("drafted") and not recent(p["time"], now, 20)]
-    if late:
-        print(f"⚠️ 有 {len(late)} 則選卡回覆收到超過 20 小時還沒回（24 小時後就不能回）")
     purge(st, now)
     if not a.dry_run:
         save_state(st)
-    print(f"完成：送出 {api.sent} 則，待回覆 {sum(1 for p in st['pending_card'] if not p.get('drafted'))} 則，"
-          f"其他私訊 {len(st['pending_other'])} 則，連續錯誤 {st['errors']} 次")
+    print(f"完成：送出 {api.sent} 則，連續錯誤 {st['errors']} 次")
     if not ok:
         sys.exit(1)
 
