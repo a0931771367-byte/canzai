@@ -1,0 +1,35 @@
+{
+  "fetched_at": "2026-11-06T14:31:03.824416+08:00",
+  "since": "2026-11-05",
+  "until": "2026-11-06",
+  "account": {
+    "id": "17841467330075264",
+    "followers_count": 0,
+    "media_count": 1,
+    "username": "canzai_money"
+  },
+  "account_insights": {
+    "reach": "無法取得：HTTP Error 400: Bad Request",
+    "views": "無法取得：HTTP Error 400: Bad Request",
+    "accounts_engaged": "無法取得：HTTP Error 400: Bad Request",
+    "profile_views": "無法取得：HTTP Error 400: Bad Request",
+    "total_interactions": "無法取得：HTTP Error 400: Bad Request",
+    "follows_and_unfollows": "無法取得：HTTP Error 400: Bad Request"
+  },
+  "posts": [
+    {
+      "id": "17918620251266074",
+      "caption": "初次見面，我是罐仔 🫙\n一個長了翅膀的存錢罐，存到夠多回饋就能飛出國。\n\n這裡每週會整理：\n💳 日常消費怎麼刷最划算（超商、外送、網購、訂閱）\n✈️ 每 3～4 個月一次出國實戰，算給你看海外刷卡怎麼省\n\n不推「最強神卡」，只告訴你什麼情況適合什麼卡。\n追蹤起來，下次刷卡前先來看一眼。\n\n#信用卡回饋 #省錢 #理財小白 #出國刷卡 #罐仔",
+      "comments_count": 0,
+      "like_count": 0,
+      "media_product_type": "FEED",
+      "media_type": "CAROUSEL_ALBUM",
+      "permalink": "https://www.instagram.com/p/DfXKVGaE_sB/",
+      "timestamp": "2026-11-05T13:40:42+0000",
+      "date": "2026-11-05",
+      "insights": {
+        "error": "HTTP Error 400: Bad Request"
+      }
+    }
+  ]
+}
