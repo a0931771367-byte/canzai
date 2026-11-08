@@ -105,6 +105,17 @@ def url_live(url, tries=20):
     return False
 
 
+
+def silent(mp4):
+    """Reel 音軌是不是靜音（最大音量低於 -60 dB 或沒有音軌）。沒有 ffmpeg 時回傳 False，不擋發文。"""
+    try:
+        r = subprocess.run(["ffmpeg", "-hide_banner", "-i", mp4, "-af", "volumedetect", "-vn", "-f", "null", "-"],
+                           capture_output=True, text=True, timeout=120)
+    except (OSError, subprocess.TimeoutExpired):
+        return False
+    m = re.search(r"max_volume: (-?[\d.]+) dB", r.stderr)
+    return (not m) or float(m.group(1)) < -60
+
 def main():
     ap = argparse.ArgumentParser(description="每日自動發文排程")
     ap.add_argument("--plan", action="store_true")
@@ -165,6 +176,9 @@ def main():
             return
         base_url = f"{base}/{urllib.parse.quote(week)}/{urllib.parse.quote(os.path.basename(folder))}" if base else "https://example.invalid"
         first = "reel.mp4" if os.path.exists(os.path.join(folder, "reel.mp4")) else "01.jpg"
+        if first == "reel.mp4" and silent(os.path.join(folder, "reel.mp4")):
+            todo(f"{pid}「{title}」的 reel.mp4 沒有聲音（API 不能加 IG 音樂），先混入配樂再發；排程不發靜音 Reel")
+            return
         if base and not a.dry_run and not url_live(f"{base_url}/{first}"):
             todo(f"{pid} 的媒體還沒放上公開網址：{base_url}/{first}")
             return
