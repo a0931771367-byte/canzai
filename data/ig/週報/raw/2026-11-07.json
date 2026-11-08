@@ -1,0 +1,35 @@
+{
+  "fetched_at": "2026-11-08T14:02:19.491785+08:00",
+  "since": "2026-11-07",
+  "until": "2026-11-08",
+  "account": {
+    "id": "17841467330075264",
+    "followers_count": 0,
+    "media_count": 4,
+    "username": "canzai_money"
+  },
+  "account_insights": {
+    "reach": "無法取得：HTTP Error 400: Bad Request",
+    "views": "無法取得：HTTP Error 400: Bad Request",
+    "accounts_engaged": "無法取得：HTTP Error 400: Bad Request",
+    "profile_views": "無法取得：HTTP Error 400: Bad Request",
+    "total_interactions": "無法取得：HTTP Error 400: Bad Request",
+    "follows_and_unfollows": "無法取得：HTTP Error 400: Bad Request"
+  },
+  "posts": [
+    {
+      "id": "18132830266865594",
+      "caption": "折價券、蝦幣、信用卡回饋，可以一起用嗎？\n\n可以，順序對就好：平台折價券先扣，再用蝦幣或購物金折抵，剩下的金額才刷卡拿回饋。\n\n多數銀行回饋是按實際刷卡金額算，但各卡不同，例如蝦皮聯名卡的蝦幣回饋，官方寫的是以訂單金額計算。\n\n算一次給你看：2,000 元的訂單，券 −200、蝦幣 −100，刷 1,700 元拿 3% 回饋 51 元，總共省 351 元。\n\n11/11 結帳前存起來照著走。\n\n每個網購大檔，罐仔都會更新一次疊加順序。\n\n※ 範例數字為示意，各平台與銀行規則依官方公告為準。\n\n#雙11 #蝦皮 #蝦幣 #信用卡回饋 #省錢",
+      "comments_count": 0,
+      "like_count": 0,
+      "media_product_type": "FEED",
+      "media_type": "CAROUSEL_ALBUM",
+      "permalink": "https://www.instagram.com/p/DfcRAYml2W0/",
+      "timestamp": "2026-11-07T13:15:30+0000",
+      "date": "2026-11-07",
+      "insights": {
+        "error": "HTTP Error 400: Bad Request"
+      }
+    }
+  ]
+}

@@ -9,6 +9,7 @@
     python3 run_schedule.py --dry-run       # 模擬：該發哪篇、走一次三道關卡，但不呼叫發文
     python3 run_schedule.py --mark 00 [--media-id X]   # 手動發過的（例如 00 自介）記成已發，排程就不會重發
     python3 run_schedule.py --now "2026-11-05 20:03"   # 模擬時間（測試用）
+    python3 run_schedule.py --late 02       # 補發已錯過的 02（只在罐子同意後手動觸發）
 
 環境變數：
   CANZAI_CONTENT    內容部資料夾（預設 /mnt/project-files/內容部）。會讀 規格/*.json 每一週，
@@ -111,6 +112,7 @@ def main():
     ap.add_argument("--mark")
     ap.add_argument("--media-id", default="")
     ap.add_argument("--now")
+    ap.add_argument("--late", default="", help="補發一篇已錯過 2 小時的貼文（罐子同意後手動觸發用），例如 --late 02")
     a = ap.parse_args()
     now = dt.datetime.strptime(a.now, "%Y-%m-%d %H:%M").replace(tzinfo=TZ) if a.now else dt.datetime.now(TZ)
     led = load_ledger()
@@ -139,7 +141,7 @@ def main():
     for t, pid, title, _, week in sched:
         if pid in led:
             continue
-        if now >= t + GRACE:
+        if now >= t + GRACE and pid != a.late:
             if a.dry_run:
                 print(f"（模擬）{pid} 已錯過 2 小時，正式跑時會寫進 待處理.md")
             elif not led.get(f"_missed_{pid}"):
@@ -148,7 +150,11 @@ def main():
                 save_ledger(led)
             continue
         if now < t:
+            if a.late and a.late not in led:
+                continue  # 補發模式：繼續找指定的那篇
             break  # 依時間排序，後面的都還沒到
+        if a.late and pid != a.late:
+            continue
         folder = folder_of(pid, week)
         if not folder:
             todo(f"{pid}「{title}」找不到貼文資料夾（{CONTENT}/{week}/{pid}_*）")
@@ -183,7 +189,8 @@ def main():
             save_ledger(led)
             todo(f"{pid}「{title}」IG 上已經有了（可能是手動或 Metricool 發的），排程沒有重發")
         else:
-            why = {2: "官網重查擋下（看資料夾裡的 查證報告.md）", 1: "合規或文案檢查沒過"}.get(r.returncode, "發文失敗")
+            why = {2: "官網重查擋下（看資料夾裡的 查證報告.md）", 1: "合規或文案檢查沒過",
+                   5: "品管部去 AI 感檢查沒過（看 品管部/去AI感檢查表.md）"}.get(r.returncode, "發文失敗")
             todo(f"{pid}「{title}」{why}，結束碼 {r.returncode}。修好後 2 小時內排程會自動重試")
         return  # 一次只發一篇
 

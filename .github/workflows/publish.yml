@@ -8,7 +8,9 @@ on:
     # GitHub 的 */10 實際常拖好幾小時才跑一次，所以在發文時段（台灣 12:00、20:00）前後多排幾次
     - cron: "2,7,13,19,27,38,52 4 * * *"
     - cron: "2,7,13,19,27,38,52 12 * * *"
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      late: { description: "補發已錯過的貼文編號（例如 02），平常留空", type: string, default: "" }
 concurrency: { group: publish, cancel-in-progress: false }
 permissions: { contents: write }
 jobs:
@@ -26,9 +28,10 @@ jobs:
           IG_USER_ID: ${{ secrets.IG_USER_ID }}
           CANZAI_CONTENT: 內容部
           CANZAI_MEDIA_BASE: https://a0931771367-byte.github.io/canzai/%E5%85%A7%E5%AE%B9%E9%83%A8
+          LATE: ${{ inputs.late }}
         run: |
           if [ -z "$IG_TOKEN" ]; then echo "還沒設定 IG_TOKEN secret，略過"; exit 0; fi
-          python3 程式部/ig_publish/run_schedule.py
+          python3 程式部/ig_publish/run_schedule.py ${LATE:+--late "$LATE"}
       - name: 存回發文紀錄
         run: |
           git config user.name "canzai-bot"; git config user.email "canzai-bot@users.noreply.github.com"
