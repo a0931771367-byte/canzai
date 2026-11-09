@@ -150,6 +150,21 @@ def fetch_text(url, timeout=30):
     return None, err
 
 
+def pdf_text(raw):
+    try:
+        import io
+        from pypdf import PdfReader
+    except ImportError:
+        return None, "PDF 需要 pypdf 才能讀（pip install pypdf）"
+    try:
+        text = "\n".join(pg.extract_text() or "" for pg in PdfReader(io.BytesIO(raw)).pages)
+    except Exception as e:  # noqa: BLE001
+        return None, f"PDF 讀取失敗：{e}"
+    if len(norm(text)) < 50:
+        return None, "PDF 取不出文字（可能是掃描圖檔）"
+    return text, None
+
+
 def fetch_live(url, timeout=30):
     """先用一般 HTTP 抓；內容太少（多半是 JavaScript 產生的頁面）就改用 Playwright 開瀏覽器抓。"""
     err, text = None, None
@@ -160,6 +175,8 @@ def fetch_live(url, timeout=30):
         with urllib.request.urlopen(req, timeout=timeout) as r:
             raw = r.read()
             enc = r.headers.get_content_charset() or "utf-8"
+        if raw[:5] == b"%PDF-":  # PDF 要先取出文字；沒有 pypdf 就交給 Mac 快照
+            return pdf_text(raw)
         page = raw.decode(enc, errors="replace")
         text = html.unescape(re.sub(r"<[^>]+>", " ", re.sub(r"(?is)<(script|style)[^>]*>.*?</\1>", " ", page)))
         if len(norm(text)) > 150:
