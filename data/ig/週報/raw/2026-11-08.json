@@ -1,0 +1,41 @@
+{
+  "fetched_at": "2026-11-09T14:31:59.130806+08:00",
+  "since": "2026-11-08",
+  "until": "2026-11-09",
+  "account": {
+    "id": "17841467330075264",
+    "followers_count": 0,
+    "media_count": 4,
+    "username": "canzai_money"
+  },
+  "account_insights": {
+    "reach": "無法取得：HTTP Error 400: Bad Request",
+    "views": "無法取得：HTTP Error 400: Bad Request",
+    "accounts_engaged": "無法取得：HTTP Error 400: Bad Request",
+    "profile_views": "無法取得：HTTP Error 400: Bad Request",
+    "total_interactions": "無法取得：HTTP Error 400: Bad Request",
+    "follows_and_unfollows": "無法取得：HTTP Error 400: Bad Request"
+  },
+  "posts": [
+    {
+      "id": "18195669340396074",
+      "caption": "傳給那個每年雙11 都忘記登錄的朋友 👀\n\n11/11 凌晨 12 點，罐仔下單超快，結果一個月後看帳單，只拿到基本回饋。\n\n原因只有一個：活動沒有先登錄。很多信用卡加碼活動都要先在銀行 App 按登錄，而且有名額限制。\n\n今年下單前，先登錄再搶。\n\n下一支想看哪個？留言 A「罐仔有 8 張卡只用 2 張」或 B「罐仔被首刷禮誘惑」，票多的下週做。\n\n👉 追蹤罐仔：每週一集罐仔小劇場，下一集演什麼由你投票。\n\n※ 片中數字為示意，實際條件依各銀行公告為準。\n\n#雙11 #信用卡回饋 #罐仔小劇場 #省錢 #罐仔",
+      "comments_count": 0,
+      "like_count": 0,
+      "media_product_type": "REELS",
+      "media_type": "VIDEO",
+      "permalink": "https://www.instagram.com/reel/Dfd2zfzlKEw/",
+      "timestamp": "2026-11-08T04:05:12+0000",
+      "date": "2026-11-08",
+      "insights": {
+        "error": "HTTP Error 400: Bad Request",
+        "ig_reels_avg_watch_time": null,
+        "reels_skip_rate": null,
+        "votes": {
+          "A": 0,
+          "B": 0
+        }
+      }
+    }
+  ]
+}

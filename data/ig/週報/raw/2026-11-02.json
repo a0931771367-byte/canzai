@@ -1,0 +1,89 @@
+{
+  "fetched_at": "2026-11-09T14:32:05.780995+08:00",
+  "since": "2026-11-02",
+  "until": "2026-11-09",
+  "account": {
+    "id": "17841467330075264",
+    "followers_count": 0,
+    "media_count": 4,
+    "username": "canzai_money"
+  },
+  "account_insights": {
+    "reach": "無法取得：HTTP Error 400: Bad Request",
+    "views": "無法取得：HTTP Error 400: Bad Request",
+    "accounts_engaged": "無法取得：HTTP Error 400: Bad Request",
+    "profile_views": "無法取得：HTTP Error 400: Bad Request",
+    "total_interactions": "無法取得：HTTP Error 400: Bad Request",
+    "follows_and_unfollows": "無法取得：HTTP Error 400: Bad Request"
+  },
+  "posts": [
+    {
+      "id": "18195669340396074",
+      "caption": "傳給那個每年雙11 都忘記登錄的朋友 👀\n\n11/11 凌晨 12 點，罐仔下單超快，結果一個月後看帳單，只拿到基本回饋。\n\n原因只有一個：活動沒有先登錄。很多信用卡加碼活動都要先在銀行 App 按登錄，而且有名額限制。\n\n今年下單前，先登錄再搶。\n\n下一支想看哪個？留言 A「罐仔有 8 張卡只用 2 張」或 B「罐仔被首刷禮誘惑」，票多的下週做。\n\n👉 追蹤罐仔：每週一集罐仔小劇場，下一集演什麼由你投票。\n\n※ 片中數字為示意，實際條件依各銀行公告為準。\n\n#雙11 #信用卡回饋 #罐仔小劇場 #省錢 #罐仔",
+      "comments_count": 0,
+      "like_count": 0,
+      "media_product_type": "REELS",
+      "media_type": "VIDEO",
+      "permalink": "https://www.instagram.com/reel/Dfd2zfzlKEw/",
+      "timestamp": "2026-11-08T04:05:12+0000",
+      "date": "2026-11-08",
+      "insights": {
+        "error": "HTTP Error 400: Bad Request",
+        "ig_reels_avg_watch_time": null,
+        "reels_skip_rate": null,
+        "votes": {
+          "A": 0,
+          "B": 0
+        }
+      }
+    },
+    {
+      "id": "18132830266865594",
+      "caption": "折價券、蝦幣、信用卡回饋，可以一起用嗎？\n\n可以，順序對就好：平台折價券先扣，再用蝦幣或購物金折抵，剩下的金額才刷卡拿回饋。\n\n多數銀行回饋是按實際刷卡金額算，但各卡不同，例如蝦皮聯名卡的蝦幣回饋，官方寫的是以訂單金額計算。\n\n算一次給你看：2,000 元的訂單，券 −200、蝦幣 −100，刷 1,700 元拿 3% 回饋 51 元，總共省 351 元。\n\n11/11 結帳前存起來照著走。\n\n每個網購大檔，罐仔都會更新一次疊加順序。\n\n※ 範例數字為示意，各平台與銀行規則依官方公告為準。\n\n#雙11 #蝦皮 #蝦幣 #信用卡回饋 #省錢",
+      "comments_count": 0,
+      "like_count": 0,
+      "media_product_type": "FEED",
+      "media_type": "CAROUSEL_ALBUM",
+      "permalink": "https://www.instagram.com/p/DfcRAYml2W0/",
+      "timestamp": "2026-11-07T13:15:30+0000",
+      "date": "2026-11-07",
+      "insights": {
+        "error": "HTTP Error 400: Bad Request"
+      }
+    },
+    {
+      "id": "18171040438482183",
+      "caption": "刷 1 萬、回饋 5%，你以為拿 500，可能只拿到 300。\n\n「最高 5%」後面通常還有幾行小字。罐仔下單前會先看三個地方。\n\n第一個是每月上限，也是最常被忽略的。假設 5% 回饋每月上限 300 元，刷到 6,000 元就滿了，再刷下去只剩基本回饋。\n\n再來是要不要先登錄。很多加碼沒登錄就不算，名額滿了也沒有。\n\n最後看有沒有指定條件，例如限指定通路，或要綁自家帳戶自動扣繳。\n\n下一支想看哪個？留言 A「12 月去日本刷哪類卡」或 B「12/31 到期的卡片優惠」，票多的下週做 👀\n\n※ 範例數字為示意，不是特定卡片，實際條件依各銀行公告為準。本篇沒有業配。\n\n#雙11 #信用卡回饋 #省錢 #理財 #罐仔",
+      "comments_count": 0,
+      "like_count": 0,
+      "media_product_type": "REELS",
+      "media_type": "VIDEO",
+      "permalink": "https://www.instagram.com/reel/DfZw6OHAR64/",
+      "timestamp": "2026-11-06T13:56:55+0000",
+      "date": "2026-11-06",
+      "insights": {
+        "error": "HTTP Error 400: Bad Request",
+        "ig_reels_avg_watch_time": null,
+        "reels_skip_rate": null,
+        "votes": {
+          "A": 0,
+          "B": 0
+        }
+      }
+    },
+    {
+      "id": "17918620251266074",
+      "caption": "初次見面，我是罐仔 🫙\n一個長了翅膀的存錢罐，存到夠多回饋就能飛出國。\n\n這裡每週會整理：\n💳 日常消費怎麼刷最划算（超商、外送、網購、訂閱）\n✈️ 每 3～4 個月一次出國實戰，算給你看海外刷卡怎麼省\n\n不推「最強神卡」，只告訴你什麼情況適合什麼卡。\n追蹤起來，下次刷卡前先來看一眼。\n\n#信用卡回饋 #省錢 #理財小白 #出國刷卡 #罐仔",
+      "comments_count": 0,
+      "like_count": 0,
+      "media_product_type": "FEED",
+      "media_type": "CAROUSEL_ALBUM",
+      "permalink": "https://www.instagram.com/p/DfXKVGaE_sB/",
+      "timestamp": "2026-11-05T13:40:42+0000",
+      "date": "2026-11-05",
+      "insights": {
+        "error": "HTTP Error 400: Bad Request"
+      }
+    }
+  ]
+}
