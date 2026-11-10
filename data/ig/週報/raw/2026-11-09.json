@@ -1,0 +1,41 @@
+{
+  "fetched_at": "2026-11-10T15:19:42.265260+08:00",
+  "since": "2026-11-09",
+  "until": "2026-11-10",
+  "account": {
+    "id": "17841467330075264",
+    "followers_count": 0,
+    "media_count": 5,
+    "username": "canzai_money"
+  },
+  "account_insights": {
+    "reach": "無法取得：HTTP Error 400: Bad Request",
+    "views": "無法取得：HTTP Error 400: Bad Request",
+    "accounts_engaged": "無法取得：HTTP Error 400: Bad Request",
+    "profile_views": "無法取得：HTTP Error 400: Bad Request",
+    "total_interactions": "無法取得：HTTP Error 400: Bad Request",
+    "follows_and_unfollows": "無法取得：HTTP Error 400: Bad Request"
+  },
+  "posts": [
+    {
+      "id": "18636737377063686",
+      "caption": "3 萬元的家電要刷分期？下單前這支先存起來 👀\n\n3 萬元的冰箱，一次付清用 3% 回饋的卡，可以拿 900 元。刷分期的話，很多卡分期不給回饋，可能是 0 元。\n\n但還有一個坑：如果這張卡每月回饋上限 300 元，一次刷 3 萬也只拿得到 300 元。罐仔遇到大額消費，會先查分期有沒有回饋、再看上限，必要時拆兩個月或換一張無上限的卡。\n\n下一支想看哪個？留言 A「12 月去日本刷哪類卡」或 B「首刷禮怎麼看才不吃虧」，票多的下週做。\n\n※ 範例數字為示意，實際條件依各銀行公告為準。\n\n#雙11 #信用卡分期 #信用卡回饋 #家電 #省錢",
+      "comments_count": 0,
+      "like_count": 0,
+      "media_product_type": "REELS",
+      "media_type": "VIDEO",
+      "permalink": "https://www.instagram.com/reel/DfhSr89Gt4-/",
+      "timestamp": "2026-11-09T12:06:31+0000",
+      "date": "2026-11-09",
+      "insights": {
+        "error": "HTTP Error 400: Bad Request",
+        "ig_reels_avg_watch_time": null,
+        "reels_skip_rate": null,
+        "votes": {
+          "A": 0,
+          "B": 0
+        }
+      }
+    }
+  ]
+}
