@@ -35,7 +35,11 @@ def fetch(url, timeout=30):
     try:
         req = urllib.request.Request(url, headers={"User-Agent": UA, "Accept-Language": "zh-TW,zh;q=0.9"})
         with urllib.request.urlopen(req, timeout=timeout) as r:
-            page = r.read().decode(r.headers.get_content_charset() or "utf-8", errors="replace")
+            raw = r.read()
+            charset = r.headers.get_content_charset()
+        if raw[:5] == b"%PDF-":  # PDF 不能當 HTML 拆，改用 macOS 內建的 PDFKit 取出文字
+            return pdf_text(raw), "pdf"
+        page = raw.decode(charset or "utf-8", errors="replace")
         text = html.unescape(re.sub(r"<[^>]+>", " ", re.sub(r"(?is)<(script|style)[^>]*>.*?</\1>", " ", page)))
         text = re.sub(r"[ \t\r\f\v]+", " ", text)
         text = re.sub(r"\n\s*\n+", "\n", text)
@@ -59,6 +63,24 @@ def fetch(url, timeout=30):
     if text:
         return text, "http"
     raise RuntimeError(err or "抓不到內容")
+
+
+def pdf_text(raw):
+    """用 macOS 內建的 PDFKit（osascript JavaScript）把 PDF 轉成純文字，不用另外安裝套件。"""
+    import tempfile
+    with tempfile.NamedTemporaryFile(suffix=".pdf", delete=False) as f:
+        f.write(raw)
+        path = f.name
+    js = ("ObjC.import('Quartz');function run(a){var d=$.PDFDocument.alloc.initWithURL($.NSURL.fileURLWithPath(a[0]));"
+          "return d.isNil()?'':ObjC.unwrap(d.string);}")
+    try:
+        r = subprocess.run(["osascript", "-l", "JavaScript", "-e", js, path], capture_output=True, text=True, timeout=120)
+    finally:
+        os.unlink(path)
+    text = r.stdout.strip()
+    if len(re.sub(r"\s", "", text)) < 50:
+        raise RuntimeError(f"PDF 取不出文字：{r.stderr.strip()[:200] or '可能是掃描圖檔'}")
+    return text
 
 
 def git(*args):
