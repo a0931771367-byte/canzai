@@ -1,0 +1,41 @@
+{
+  "fetched_at": "2026-11-11T14:23:18.720220+08:00",
+  "since": "2026-11-10",
+  "until": "2026-11-11",
+  "account": {
+    "id": "17841467330075264",
+    "followers_count": 0,
+    "media_count": 7,
+    "username": "canzai_money"
+  },
+  "account_insights": {
+    "reach": "無法取得：HTTP Error 400: Bad Request",
+    "views": "無法取得：HTTP Error 400: Bad Request",
+    "accounts_engaged": "無法取得：HTTP Error 400: Bad Request",
+    "profile_views": "無法取得：HTTP Error 400: Bad Request",
+    "total_interactions": "無法取得：HTTP Error 400: Bad Request",
+    "follows_and_unfollows": "無法取得：HTTP Error 400: Bad Request"
+  },
+  "posts": [
+    {
+      "id": "17999747331001624",
+      "caption": "今晚搶購前花 30 秒對 5 項，也傳給一起熬夜的朋友 👀\n\n11/11 下單前，花 30 秒對這 5 項：\n\n□ 活動登錄了嗎？\n□ 指定條件（例如自動扣繳）做到了嗎？\n□ 回饋上限還剩多少？\n□ 一次付清還是分期？\n□ 支付方式用對了嗎？\n\n少一項，回饋可能就只剩基本回饋。罐仔自己每次都是截圖這張，結帳前照著打勾。\n\n下一支想看哪個？留言 A「雙11 刷錯卡怎麼補救」或 B「回饋多久會入帳」，票多的先做。\n\n※ 各卡活動條件依銀行公告為準。\n\n#雙11 #1111 #信用卡回饋 #省錢 #網購",
+      "comments_count": 0,
+      "like_count": 0,
+      "media_product_type": "REELS",
+      "media_type": "VIDEO",
+      "permalink": "https://www.instagram.com/reel/Dfj3bT1DWhk/",
+      "timestamp": "2026-11-10T12:06:13+0000",
+      "date": "2026-11-10",
+      "insights": {
+        "error": "HTTP Error 400: Bad Request",
+        "ig_reels_avg_watch_time": null,
+        "reels_skip_rate": null,
+        "votes": {
+          "A": 0,
+          "B": 0
+        }
+      }
+    }
+  ]
+}
