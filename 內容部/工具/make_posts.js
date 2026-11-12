@@ -222,6 +222,26 @@ function sfxEvents(post) {
   });
   return ev.filter(e => e[1] < st - 0.2);
 }
+// ---------- 口白（2026-11-12）：每幕 vo 欄位 → voiceover.py 產音檔 → 幕長自動拉到「口白＋0.6 秒」 ----------
+// 規定：不擷取、不克隆任何真人聲音（含學習對象帳號）；只用合成預設聲或罐子本人錄音。
+function prepareVO(post) {
+  if (!post.slides.some(s => s.vo)) return null;
+  const { execFileSync } = require('child_process');
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'canzai_vo_'));
+  const pj = path.join(tmp, 'post.json'); fs.writeFileSync(pj, JSON.stringify(post));
+  const cache = path.join(__dirname, '..', '口白', String(post.id));
+  const res = JSON.parse(execFileSync('python3', [path.join(__dirname, 'voiceover.py'), pj, cache], { encoding: 'utf8' }));
+  if (res.missing.length) {
+    console.error(`✗ ${post.id} 缺口白音檔（${res.missing.length} 段），請先產生後放到：`);
+    res.missing.forEach(m => console.error(`  ${m.want}  ←「${m.text}」`));
+    throw new Error('缺口白音檔');
+  }
+  const lead = 0.15;
+  res.lines.forEach(l => { const s = post.slides[l.i]; s.dur = Math.max(s.dur || 0, +(l.sec + lead + 0.45).toFixed(2)); });
+  let st = 0; const starts = post.slides.map(s => { const v = st; st += s.dur || 5; return v; });
+  return res.lines.map(l => ({ file: l.file, at: starts[l.i] + lead }));
+}
+
 function addAudio(post, silent, out, total) {
   const { execFileSync } = require('child_process');
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'canzai_sfx_'));
@@ -230,18 +250,27 @@ function addAudio(post, silent, out, total) {
   const idx = post.bgm != null ? post.bgm : [...String(post.id)].reduce((a, c) => a + c.charCodeAt(0), 0) % BGM.length;
   const bgm = path.join(__dirname, '..', '音樂', 'artlist', BGM[idx]);
   const T = total.toFixed(2), fo = Math.max(0, total - 1.2).toFixed(2);
-  const fc = fs.existsSync(bgm) && post.bgm !== false
-    ? `[2:a]atrim=0:${T},asetpts=N/SR/TB,afade=t=in:d=0.3,afade=t=out:st=${fo}:d=1.2,volume=0.32[b];[1:a][b]amix=inputs=2:normalize=0:duration=first,loudnorm=I=-16:TP=-1.5:LRA=11[a]`
-    : `[1:a]loudnorm=I=-16:TP=-1.5:LRA=11[a]`;
+  const hasBgm = fs.existsSync(bgm) && post.bgm !== false;
+  const vo = post._vo || [];
   const args = ['-loglevel', 'error', '-y', '-i', silent, '-i', path.join(tmp, '_sfx.wav')];
-  if (fs.existsSync(bgm) && post.bgm !== false) args.push('-i', bgm);
+  if (hasBgm) args.push('-i', bgm);
+  vo.forEach(v => args.push('-i', v.file));
+  const v0 = hasBgm ? 3 : 2;
+  // 有口白：背景音樂壓低到 0.10、音效 0.55，口白放最前面
+  const sfxVol = vo.length ? 0.55 : 1, bgmVol = vo.length ? 0.10 : 0.32;
+  let fc = `[1:a]volume=${sfxVol}[s];`;
+  const mix = ['[s]'];
+  if (hasBgm) { fc += `[2:a]atrim=0:${T},asetpts=N/SR/TB,afade=t=in:d=0.3,afade=t=out:st=${fo}:d=1.2,volume=${bgmVol}[b];`; mix.push('[b]'); }
+  vo.forEach((v, k) => { const ms = Math.round(v.at * 1000); fc += `[${v0 + k}:a]aresample=44100,aformat=channel_layouts=stereo,adelay=${ms}|${ms},volume=1.6[v${k}];`; mix.push(`[v${k}]`); });
+  fc += mix.length > 1 ? `${mix.join('')}amix=inputs=${mix.length}:normalize=0:duration=first,loudnorm=I=-16:TP=-1.5:LRA=11[a]` : `[s]loudnorm=I=-16:TP=-1.5:LRA=11[a]`;
   args.push('-filter_complex', fc, '-map', '0:v', '-map', '[a]', '-c:v', 'copy', '-c:a', 'aac', '-b:a', '192k', '-ar', '44100', '-t', T, '-movflags', '+faststart', out);
   execFileSync('ffmpeg', args);
-  post._bgm = fs.existsSync(bgm) && post.bgm !== false ? BGM[idx].replace('.mp3', '') : '只有音效';
+  post._bgm = (hasBgm ? BGM[idx].replace('.mp3', '') : '只有音效') + (vo.length ? '＋口白' : '');
 }
 
 async function renderReel(post, dir) {
   const W = 1080, H = 1920;
+  post._vo = prepareVO(post);
   const n = post.slides.length;
   const scenes = post.slides.map((s, i) => `<div class="scene" data-dur="${s.dur || 5}" style="position:absolute;inset:0">${slideHTML(s, i, n, post, H)}</div>`).join('');
   const html = R.wrap(`${scenes}<div class="prog" style="top:236px;right:230px"><i style="width:0"></i></div><script>${ANIM_JS}</script>`, W, H, BASE_CSS);
@@ -271,6 +300,7 @@ function postMD(post, info) {
     if (s.items) d += ' — ' + s.items.map(strip).join('／');
     if (s.options) d += ' — A：' + strip(s.options[0]) + '／B：' + strip(s.options[1]);
     if (s.bubble) d += `（罐仔：${strip(s.bubble)}）`;
+    if (s.vo) d += `\n   🎙 口白：${s.vo}`;
     lines.push(d);
   });
   lines.push('', '## IG 文案（直接複製）', '', '```', post.caption.trim(), '', post.hashtags.join(' '), '```', '',
