@@ -23,6 +23,17 @@ def dur(path):
     return float(out.strip())
 
 
+def tidy(src, tempo=1.0):
+    """tempo：整段加速（不變音高），合成聲偏慢時用 1.1～1.2。
+    去掉頭尾靜音、把句中超過 0.25 秒的停頓縮成 0.15 秒（合成聲常前後各留 0.3～0.5 秒）。"""
+    out = os.path.splitext(src)[0] + f".tidy{tempo:g}.wav"
+    if not os.path.exists(out) or os.path.getmtime(out) < os.path.getmtime(src):
+        subprocess.run(["ffmpeg", "-loglevel", "error", "-y", "-i", src, "-af",
+                        "silenceremove=start_periods=1:start_threshold=-40dB:stop_periods=-1:stop_duration=0.25:stop_threshold=-40dB:stop_silence=0.15" + (f",atempo={tempo}" if tempo != 1 else ""),
+                        "-ar", "44100", out], check=True)
+    return out
+
+
 def azure(text, voice, rate, out):
     key, region = os.environ.get("AZURE_SPEECH_KEY"), os.environ.get("AZURE_SPEECH_REGION")
     if not key or not region:
@@ -54,6 +65,7 @@ def main():
         if not hit and engine == "azure" and azure(text, voice, rate, os.path.join(cache, stem + ".mp3")):
             hit = os.path.join(cache, stem + ".mp3")
         if hit:
+            hit = tidy(hit, float(v.get("tempo", 1.0)))
             lines.append({"i": i, "file": hit, "sec": round(dur(hit), 2)})
         else:
             missing.append({"i": i, "text": text, "want": os.path.join(cache, stem + ".mp3")})
