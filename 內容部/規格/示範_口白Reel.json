@@ -107,9 +107,9 @@
    "factcheck": "- [ ] 金管會 115年8月底流通卡數約 5,961 萬張、有效卡數約 4,012 萬張 ｜來源：https://www.fsc.gov.tw/ch/home.jsp?id=96&parentpath=0%2C2&mcustomize=news_view.jsp&dataserno=202610080004&toolsflag=Y&dtable=News ｜必須出現：`5,961`、`4,012` ｜到期：2026-12-10（9 月份數字發布後要換新）\n- [ ] 有效卡定義＝最近六個月有刷卡消費紀錄之卡片 ｜來源：https://law.fsc.gov.tw/LawContent.aspx?id=GL000376 ｜必須出現：`最近六個月`\n- 本次查證方式：雲端環境連不上金管會網站，數字取自搜尋引擎擷取的官方新聞稿內容（2026/11/05）。發文前請情報部或罐子點開來源頁確認一次。",
    "voice": {
     "engine": "files",
-    "name": "higgsfield-seed_audio-Ainsley",
-    "tempo": 1.2,
-    "note": "Higgsfield seed_audio 預設聲 Ainsley，speech_rate 10；2026-11-12 罐子選用"
+    "name": "artlist-minimax02hd-Esteem",
+    "tempo": 1.1,
+    "note": "Artlist MiniMax Speech 02 HD 男聲 Esteem，Mandarin Chinese；2026-11-12 罐子選用（台灣腔較接近）"
    }
   }
  ]
