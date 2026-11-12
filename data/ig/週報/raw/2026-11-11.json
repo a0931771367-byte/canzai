@@ -1,0 +1,41 @@
+{
+  "fetched_at": "2026-11-12T15:12:31.991362+08:00",
+  "since": "2026-11-11",
+  "until": "2026-11-12",
+  "account": {
+    "id": "17841467330075264",
+    "followers_count": 0,
+    "media_count": 7,
+    "username": "canzai_money"
+  },
+  "account_insights": {
+    "reach": "無法取得：HTTP Error 400: Bad Request",
+    "views": "無法取得：HTTP Error 400: Bad Request",
+    "accounts_engaged": "無法取得：HTTP Error 400: Bad Request",
+    "profile_views": "無法取得：HTTP Error 400: Bad Request",
+    "total_interactions": "無法取得：HTTP Error 400: Bad Request",
+    "follows_and_unfollows": "無法取得：HTTP Error 400: Bad Request"
+  },
+  "posts": [
+    {
+      "id": "17997044201843243",
+      "caption": "在日本選台幣結帳，刷 10 萬日圓多付 639 元，出發前傳給要去日本的朋友 👀\n\n在日本刷 10 萬日圓（示意匯率 0.21，約 21,000 元），店員問「要用台幣還是日圓？」選錯就多付。\n\n選日圓：21,000 元加 1.5% 國外交易服務費，約 21,315 元。\n選台幣：店家用自己的匯率換算，常會多加一些（這裡用 3% 示意），變 21,630 元，很多銀行一樣再收 1.5%，約 21,954 元。\n\n一次就差 639 元。罐仔在國外刷卡，只要被問就說「日圓」；簽單上看到台幣金額，請店員取消重刷。\n\n下一支想看哪個？留言 A「12 月去日本刷哪類卡」或 B「出國前 3 個刷卡設定」，票多的先做。\n\n※ 匯率與加價為示意，國外交易服務費依各發卡銀行公告為準。\n\n#日本旅遊 #出國刷卡 #信用卡 #省錢 #罐仔",
+      "comments_count": 0,
+      "like_count": 0,
+      "media_product_type": "REELS",
+      "media_type": "VIDEO",
+      "permalink": "https://www.instagram.com/reel/DfllI_mkXLU/",
+      "timestamp": "2026-11-11T04:04:52+0000",
+      "date": "2026-11-11",
+      "insights": {
+        "error": "HTTP Error 400: Bad Request",
+        "ig_reels_avg_watch_time": null,
+        "reels_skip_rate": null,
+        "votes": {
+          "A": 0,
+          "B": 0
+        }
+      }
+    }
+  ]
+}
