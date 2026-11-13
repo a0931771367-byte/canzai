@@ -1,0 +1,41 @@
+{
+  "fetched_at": "2026-11-13T14:47:05.920461+08:00",
+  "since": "2026-11-12",
+  "until": "2026-11-13",
+  "account": {
+    "id": "17841467330075264",
+    "followers_count": 0,
+    "media_count": 8,
+    "username": "canzai_money"
+  },
+  "account_insights": {
+    "reach": "無法取得：HTTP Error 400: Bad Request",
+    "views": "無法取得：HTTP Error 400: Bad Request",
+    "accounts_engaged": "無法取得：HTTP Error 400: Bad Request",
+    "profile_views": "無法取得：HTTP Error 400: Bad Request",
+    "total_interactions": "無法取得：HTTP Error 400: Bad Request",
+    "follows_and_unfollows": "無法取得：HTTP Error 400: Bad Request"
+  },
+  "posts": [
+    {
+      "id": "18096348602657540",
+      "caption": "雙11 買完了，回饋 1～3 個月後才入帳很正常，3 步驟自己查 👀\n\n先別急，很多加碼回饋要活動結束後一到幾個月才入帳。\n\n罐仔自己是這樣做的：先看刷卡明細，金額、日期對不對，有沒有被拆成分期。再把活動頁的登錄成功畫面截圖存起來。最後看活動說明寫幾月回饋，直接記進行事曆。\n\n時間到了還沒入帳，帶著截圖問客服。雙12 也用得到。\n\n下一支想看哪個？留言 A「每月扣款綁哪類卡」或 B「12/31 到期的卡片優惠」，票多的先做。\n\n#雙11 #信用卡回饋 #回饋入帳 #省錢 #罐仔",
+      "comments_count": 0,
+      "like_count": 0,
+      "media_product_type": "REELS",
+      "media_type": "VIDEO",
+      "permalink": "https://www.instagram.com/reel/DfpBEOpDZXh/",
+      "timestamp": "2026-11-12T12:06:38+0000",
+      "date": "2026-11-12",
+      "insights": {
+        "error": "HTTP Error 400: Bad Request",
+        "ig_reels_avg_watch_time": null,
+        "reels_skip_rate": null,
+        "votes": {
+          "A": 0,
+          "B": 0
+        }
+      }
+    }
+  ]
+}
