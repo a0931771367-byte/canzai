@@ -1,0 +1,41 @@
+{
+  "fetched_at": "2026-11-14T14:24:39.995633+08:00",
+  "since": "2026-11-13",
+  "until": "2026-11-14",
+  "account": {
+    "id": "17841467330075264",
+    "followers_count": 0,
+    "media_count": 10,
+    "username": "canzai_money"
+  },
+  "account_insights": {
+    "reach": "無法取得：HTTP Error 400: Bad Request",
+    "views": "無法取得：HTTP Error 400: Bad Request",
+    "accounts_engaged": "無法取得：HTTP Error 400: Bad Request",
+    "profile_views": "無法取得：HTTP Error 400: Bad Request",
+    "total_interactions": "無法取得：HTTP Error 400: Bad Request",
+    "follows_and_unfollows": "無法取得：HTTP Error 400: Bad Request"
+  },
+  "posts": [
+    {
+      "id": "17917174413552343",
+      "caption": "傳給正在看帳單懊惱的朋友\n\n雙11 刷錯卡，還有救。\n\n還沒出貨的話，先確認優惠券能退回，再取消、用對的卡重下。\n\n已經出貨了，就看高回饋卡這個月的上限還剩多少，把其他消費改刷它，補一點回來。\n\n最後一招最實在：把這次的平台、卡片、登錄步驟記下來，明年直接照抄。\n\n罐仔也在做一份刷卡試算表，之後會推出。\n\n下一支想看哪個？留言 A「結帳選台幣還是日圓？」或 B「新光卡併台新要做什麼」，票多的下週做。\n\n追蹤罐仔，每週拆一個刷卡常見錯誤。\n\n#雙11 #信用卡 #信用卡回饋 #省錢 #罐仔",
+      "comments_count": 0,
+      "like_count": 0,
+      "media_product_type": "REELS",
+      "media_type": "VIDEO",
+      "permalink": "https://www.instagram.com/reel/DfrlfvFkjRp/",
+      "timestamp": "2026-11-13T12:03:31+0000",
+      "date": "2026-11-13",
+      "insights": {
+        "error": "HTTP Error 400: Bad Request",
+        "ig_reels_avg_watch_time": null,
+        "reels_skip_rate": null,
+        "votes": {
+          "A": 0,
+          "B": 0
+        }
+      }
+    }
+  ]
+}
