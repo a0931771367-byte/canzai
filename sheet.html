@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' data:; style-src 'unsafe-inline'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
-<title>罐仔旅行刷卡回饋試算表</title>
-<meta name="description" content="填你自己的信用卡條件，算這筆刷哪張拿得多、加碼額度還剩多少、海外手續費扣完剩多少、機票付現還是換里程。Google 試算表，表裡沒有任何銀行資料。">
+<title>罐仔 2027 上班族年度省錢表</title>
+<meta name="description" content="2027 年度預算、記帳、訂閱與固定扣款盤點、信用卡回饋上限追蹤放在同一張 Google 試算表，年底自動列出冤枉錢花在哪。表裡沒有任何銀行資料。">
 <style>
 :root{
   --bg:#FFF8EC; --card:#FFFFFF; --text:#1E2A4A; --sub:#56607A; --line:#EFE6D6;
@@ -49,46 +49,47 @@ footer{color:var(--sub);font-size:13px;margin-top:24px}
 <body>
 <main>
 <p class="note"><a href="./">← 回免費試算器</a></p>
-<h1>罐仔旅行刷卡回饋試算表</h1>
-<p class="lead">手上好幾張卡，每次刷之前都要翻筆記、查加碼還剩多少？把你自己的卡放進同一張 Google 試算表，刷之前打開看一眼。</p>
+<h1>罐仔 2027 上班族年度省錢表</h1>
+<p class="lead">每個月薪水進來，月底就不知道去哪了？自動扣款的訂閱，一年加起來可能比你想的多。這張 Google 試算表把一整年的錢放在同一個地方，年底打開就知道明年可以少花哪些冤枉錢。</p>
 
 <section>
-  <div class="price"><b>NT$149</b><span>首發價（前 30 筆或到 2026-12-31，先到者為準）</span><s>之後 NT$249</s></div>
-  <!-- 開賣時：把 href 換成 Portaly 商品網址，移除 class="off"，按鈕文字改成「購買（NT$149）」 -->
+  <div class="price"><b>NT$199</b><span>早鳥價（2026-12-31 前）</span><span class="note">2027-01-01 起 NT$299</span></div>
+  <!-- 開賣時：把 href 換成 Portaly 商品網址，移除 class="off"，按鈕文字改成「購買（NT$199）」 -->
   <a class="buy off" id="buy" href="#" rel="noopener">2026-12-01 開賣</a>
-  <p class="note">開賣前想先收到通知：追蹤 <a href="https://www.instagram.com/canzai_money/" rel="noopener">IG @canzai_money</a>，開賣當天會發文。</p>
+  <p class="note">先試試看：<a href="free.html">免費的訂閱盤點表</a>只有訂閱盤點那一頁，5 分鐘算出你一年被扣多少。</p>
 </section>
 
 <section>
   <h2>它能做什麼</h2>
   <ul>
-    <li><b>刷卡建議</b>：選類別、國內或海外、填金額，依你填的資料列出這筆淨回饋最多的 3 張卡。加碼這個月已經刷滿的卡會自動排除。</li>
-    <li><b>消費紀錄</b>：每刷一筆記一列，自動換算台幣（Google 試算表自動抓匯率），自動算回饋、扣掉海外手續費。</li>
-    <li><b>上限追蹤</b>：每個加碼本月還剩多少額度。快刷滿、7 天內到期、還沒登錄的會變色提醒。</li>
-    <li><b>機票與里程</b>：算出這張里程票 1 哩值多少錢，跟你自己定的基準比，看付現還是換里程。</li>
+    <li><b>年度預算</b>：每個類別填每月預算，1～12 月的實際花費從記帳自動加總，超支的月份會變紅。</li>
+    <li><b>訂閱與固定扣款盤點</b>：串流、雲端、電信、健身房、會員、保險，填金額和週期，算出一年總共被扣多少、哪些幾乎沒用。</li>
+    <li><b>記帳</b>：日期、類別、金額、付款方式，一筆一列。</li>
+    <li><b>信用卡回饋上限追蹤（選填）</b>：照你填的回饋條件，算出每張卡每個月實際拿到多少、加碼刷滿後有多少消費只拿到一般回饋、回饋有沒有賺回年費。</li>
+    <li><b>年底總結</b>：全年支出、超支最多的類別、儲蓄率、訂閱一年總額、信用卡淨回饋，自動列出「明年可以少花的冤枉錢」。</li>
   </ul>
-  <div class="box">範例（虛構卡片）：在國外刷 1 萬元，A 卡回饋 1%，扣掉 1.5% 海外手續費後淨回饋是 <b>−50 元</b>。回饋 1% 的卡在國外可能是倒賠，這張表會直接算給你看。</div>
+  <div class="box">範例（虛構資料）：10 個訂閱一年共被扣 55,452 元，其中標「幾乎沒用」的 3 個一年就是 <b>12,000 元</b>。</div>
 </section>
 
 <section>
-  <h2>和免費試算器差在哪</h2>
+  <h2>年底總結長這樣</h2>
   <table>
-    <tr><th></th><th>免費試算器</th><th>試算表</th></tr>
-    <tr><td>單筆試算</td><td>✔</td><td>✔</td></tr>
-    <tr><td>自動扣掉本月已用的加碼額度</td><td>—（假設本月還沒用）</td><td>✔ 從消費紀錄自動算</td></tr>
-    <tr><td>活動期間、要不要登錄</td><td>—</td><td>✔ 未登錄會提醒</td></tr>
-    <tr><td>外幣自動換算</td><td>—</td><td>✔</td></tr>
-    <tr><td>機票付現還是換里程</td><td>—</td><td>✔</td></tr>
-    <tr><td>記帳、上限追蹤</td><td>—</td><td>✔</td></tr>
+    <tr><th>項目</th><th>範例（虛構）</th></tr>
+    <tr><td>支出（記了 2 個月）</td><td>105,792</td></tr>
+    <tr><td>儲蓄率</td><td>8.8%</td></tr>
+    <tr><td>超支最多的類別</td><td>孝親與家用</td></tr>
+    <tr><td>訂閱一年總共</td><td>55,452</td></tr>
+    <tr><td>「幾乎沒用」的訂閱一年</td><td>12,000</td></tr>
+    <tr><td>信用卡回饋扣掉年費</td><td>−575</td></tr>
   </table>
 </section>
 
 <section>
   <h2>它不會做什麼</h2>
   <ul>
-    <li>表裡沒有任何銀行或卡片的資料，也沒有申辦連結。回饋率、上限、活動期間都是你照銀行公告自己填，不會因為銀行改條件就「過期」。</li>
-    <li>不會告訴你該辦哪張卡。它只幫你用好手上已經有的卡。</li>
-    <li>名額限制、指定通路、排除商店這類條件算不到，刷之前還是要看一下銀行條款。</li>
+    <li>表裡沒有任何銀行或卡片的資料，也沒有申辦連結。回饋條件由你照銀行公告自己填。</li>
+    <li>不會告訴你該辦哪張卡、該買什麼。它只幫你看清楚錢花在哪。</li>
+    <li>不會連你的銀行帳戶，資料都在你自己的雲端硬碟。</li>
   </ul>
 </section>
 
@@ -96,10 +97,10 @@ footer{color:var(--sub);font-size:13px;margin-top:24px}
   <h2>你會收到</h2>
   <ul>
     <li>Google 試算表「建立副本」連結（範例版、空白版各一）：存到你自己的雲端硬碟，罐仔看不到你填的內容。</li>
-    <li>Excel 檔（.xlsx）：給不用 Google 的人。Excel 沒有自動匯率，匯率要手動填。</li>
-    <li>之後推出 v2 免費升級。</li>
+    <li>Excel 檔（.xlsx）：給不用 Google 的人。</li>
+    <li>之後的更新版免費。</li>
   </ul>
-  <p class="note">適合手上有 2 張以上信用卡、常出國或常網購的人。電腦版 Google 試算表最順手；手機 App 可以查看和記帳。</p>
+  <p class="note">適合想從 2027 年開始把錢管好的上班族。電腦版 Google 試算表最順手；手機 App 可以查看和記帳。</p>
 </section>
 
 <section>
@@ -108,14 +109,14 @@ footer{color:var(--sub);font-size:13px;margin-top:24px}
     <li>本商品為數位內容，付款完成後由系統自動寄出連結與檔案。</li>
     <li>我已了解本商品為數位內容，同意於付款完成後立即提供，並因此不適用消費者保護法第 19 條的 7 天解除權。</li>
     <li>【使用授權】本試算表限購買者本人使用，授權不得移轉。可以自行修改、備份；不得轉售、分享或公開散布檔案或「建立副本」連結。罐仔角色、版面設計與說明文字的著作權屬罐仔工作室（個人經營）。</li>
-    <li>結果依你自行輸入的資料計算，實際回饋以發卡銀行公告及帳單為準。本表不推薦或招攬任何信用卡，也不提供投資、貸款或個人財務規劃建議。</li>
+    <li>結果依你自行輸入的資料計算，信用卡回饋以發卡銀行公告及帳單為準。本表不推薦或招攬任何信用卡或金融商品，也不提供投資、貸款或個人財務規劃建議。</li>
     <li>如果確認是本表公式錯誤，會免費修正並寄送更新版。</li>
     <li>賣家：罐仔工作室（個人經營）｜聯絡：IG 私訊 @canzai_money</li>
   </ul>
 </section>
 
 <footer>
-  <p>最後更新：2026-11-15　·　<a href="privacy.html">隱私說明</a>　·　<a href="./">免費試算器</a></p>
+  <p>最後更新：2026-11-15　·　<a href="privacy.html">隱私說明</a>　·　<a href="free.html">免費訂閱盤點表</a>　·　<a href="./">免費刷卡試算器</a></p>
 </footer>
 </main>
 </body>
