@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://a0931771367-byte.github.io/canzai/sitemap.xml
