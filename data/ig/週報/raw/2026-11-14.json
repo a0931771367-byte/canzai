@@ -1,0 +1,41 @@
+{
+  "fetched_at": "2026-11-15T14:34:11.274381+08:00",
+  "since": "2026-11-14",
+  "until": "2026-11-15",
+  "account": {
+    "id": "17841467330075264",
+    "followers_count": 0,
+    "media_count": 10,
+    "username": "canzai_money"
+  },
+  "account_insights": {
+    "reach": "無法取得：HTTP Error 400: Bad Request",
+    "views": "無法取得：HTTP Error 400: Bad Request",
+    "accounts_engaged": "無法取得：HTTP Error 400: Bad Request",
+    "profile_views": "無法取得：HTTP Error 400: Bad Request",
+    "total_interactions": "無法取得：HTTP Error 400: Bad Request",
+    "follows_and_unfollows": "無法取得：HTTP Error 400: Bad Request"
+  },
+  "posts": [
+    {
+      "id": "18118689953096484",
+      "caption": "地價稅 2 萬元刷卡繳，回饋多半是 0 元，11/30 前要繳的人先看這支 👀\n\n聯邦銀行官網直接寫：「地價稅非一般消費，不提供卡片原始回饋。」所以刷卡繳稅，重點不是回饋，是分期和小額點數。\n\n以玉山官網的地價稅活動為例（至 11/30）：單筆 5,000 元以上登錄，可以分 3 期 0 利率，2 萬元就是每期 6,667 元、利息 0。不分期的話，登錄一次付有 0.2% e point，2 萬元拿 40 點，上限 50 點。要綁玉山 Wallet，只限 Paytax、玉山 Wallet、悠遊付繳，超商不適用。\n\n刷卡繳稅還有兩件事：服務費要先問發卡銀行，授權成功就不能取消。其他銀行也有分期活動，繳之前查自己銀行官網。\n\n下一支想看哪個？留言 A「年底去日本刷哪張卡」或 B「出國前 3 個刷卡設定」，票多的先做。\n\n※ 查證日 2026/11/09，條件依各銀行官網公告為準。本篇沒有業配。\n\n#地價稅 #繳稅 #信用卡 #省錢 #罐仔",
+      "comments_count": 0,
+      "like_count": 0,
+      "media_product_type": "REELS",
+      "media_type": "VIDEO",
+      "permalink": "https://www.instagram.com/reel/DftThd6Cnv5/",
+      "timestamp": "2026-11-14T04:04:49+0000",
+      "date": "2026-11-14",
+      "insights": {
+        "error": "HTTP Error 400: Bad Request",
+        "ig_reels_avg_watch_time": null,
+        "reels_skip_rate": null,
+        "votes": {
+          "A": 0,
+          "B": 0
+        }
+      }
+    }
+  ]
+}
