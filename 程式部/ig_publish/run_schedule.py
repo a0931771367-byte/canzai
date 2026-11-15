@@ -116,6 +116,21 @@ def silent(mp4):
     m = re.search(r"max_volume: (-?[\d.]+) dB", r.stderr)
     return (not m) or float(m.group(1)) < -60
 
+def threads_sync(pid, folder, base_url, led):
+    """IG 發完同步一份到 Threads（有 THREADS_TOKEN 才做）。失敗不影響 IG，只寫進 待處理.md。"""
+    if not os.environ.get("THREADS_TOKEN"):
+        return
+    r = subprocess.run([sys.executable, os.path.join(os.path.dirname(HERE), "threads", "threads.py"), "sync", folder,
+                        "--base-url", base_url], capture_output=True, text=True)
+    print(r.stdout[-1500:], r.stderr[-800:])
+    tid = (re.findall(r"Threads 已發布，ID：\s*(\d+)", r.stdout) or [""])[-1]
+    if r.returncode == 0 and tid:
+        led[pid]["threads_id"] = tid
+        save_ledger(led)
+    else:
+        todo(f"{pid} IG 已發，但同步到 Threads 失敗（結束碼 {r.returncode}）：{(r.stderr or r.stdout).strip()[-200:]}")
+
+
 def main():
     ap = argparse.ArgumentParser(description="每日自動發文排程")
     ap.add_argument("--plan", action="store_true")
@@ -194,6 +209,7 @@ def main():
             mid = (re.findall(r"貼文 ID：\s*(\d+)", r.stdout) or [""])[-1]
             led[pid] = {"published_at": dt.datetime.now(TZ).isoformat(timespec="minutes"), "media_id": mid, "how": "排程"}
             save_ledger(led)
+            threads_sync(pid, folder, base_url, led)
             if pid == "00":
                 todo("00 自介已發，請到 IG App 手動置頂（API 不能置頂）")
         elif r.returncode == 4:  # IG 上已經有（手動或 Metricool 發過），記成已發，不再重試

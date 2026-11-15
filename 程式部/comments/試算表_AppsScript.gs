@@ -26,7 +26,12 @@ function setup() {
   }
   ScriptApp.getProjectTriggers().forEach(t => ScriptApp.deleteTrigger(t));
   ScriptApp.newTrigger('purge90').timeBased().everyDays(1).atHour(3).create();
-  const msg = '把下面這串貼到 GitHub repo 的 secret，名稱 CANZAI_BOT_KEY：\n\n' + key;
+  let url = '';
+  try { url = ScriptApp.getService().getUrl() || ''; } catch (e) {}
+  const msg = '打開 https://github.com/a0931771367-byte/canzai/settings/secrets/actions/new ，新增兩個 secret：\n\n' +
+    '① 名稱 CANZAI_BOT_KEY，內容：\n' + key + '\n\n' +
+    '② 名稱 CANZAI_SHEET_URL，內容：\n' + (url || '（還沒部署：先做「部署 → 新增部署作業」，再執行一次 setup）') +
+    (url && !/\/exec$/.test(url) ? '\n（這個網址不是 /exec 結尾，請改用「部署 → 管理部署作業」裡的網頁應用程式網址）' : '');
   Logger.log(msg);
   try { SpreadsheetApp.getUi().alert(msg); } catch (e) {}
 }
