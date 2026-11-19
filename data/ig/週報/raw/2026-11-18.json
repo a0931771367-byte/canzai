@@ -1,0 +1,41 @@
+{
+  "fetched_at": "2026-11-19T15:27:56.949726+08:00",
+  "since": "2026-11-18",
+  "until": "2026-11-19",
+  "account": {
+    "id": "17841467330075264",
+    "followers_count": 0,
+    "media_count": 12,
+    "username": "canzai_money"
+  },
+  "account_insights": {
+    "reach": "無法取得：HTTP Error 400: Bad Request",
+    "views": "無法取得：HTTP Error 400: Bad Request",
+    "accounts_engaged": "無法取得：HTTP Error 400: Bad Request",
+    "profile_views": "無法取得：HTTP Error 400: Bad Request",
+    "total_interactions": "無法取得：HTTP Error 400: Bad Request",
+    "follows_and_unfollows": "無法取得：HTTP Error 400: Bad Request"
+  },
+  "posts": [
+    {
+      "id": "18001739045824671",
+      "caption": "首刷禮怎麼拿才不落空？辦卡前，傳給正在看首刷禮的朋友 👀\n\n首刷禮不是辦了就有。罐仔拿星展官網的條款來看，有三個細節。\n\n申辦期間是 2026/11/01～2026/12/31。核卡日後 30 天內，要完成新戶指定任務。活動結束後，最快 3 個月才統一檢核，不是刷完就入帳。\n\n最後一題最重要：這張卡，你平常真的會用到嗎？用不到，禮再大也不划算。\n\n辦卡之前，罐仔先幫你把條款小字讀完。\n\n※ 查證日 2026/11/03，條件依銀行官網公告為準。本篇不是推薦辦卡，也沒有業配。\n\n#首刷禮 #信用卡 #辦卡 #省錢 #罐仔",
+      "comments_count": 0,
+      "like_count": 0,
+      "media_product_type": "REELS",
+      "media_type": "VIDEO",
+      "permalink": "https://www.instagram.com/reel/Df4d-PyCfZD/",
+      "timestamp": "2026-11-18T12:07:51+0000",
+      "date": "2026-11-18",
+      "insights": {
+        "error": "HTTP Error 400: Bad Request",
+        "ig_reels_avg_watch_time": null,
+        "reels_skip_rate": null,
+        "votes": {
+          "A": 0,
+          "B": 0
+        }
+      }
+    }
+  ]
+}
