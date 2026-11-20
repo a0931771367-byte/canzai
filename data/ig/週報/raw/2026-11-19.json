@@ -1,0 +1,35 @@
+{
+  "fetched_at": "2026-11-20T15:17:34.051587+08:00",
+  "since": "2026-11-19",
+  "until": "2026-11-20",
+  "account": {
+    "id": "17841467330075264",
+    "followers_count": 0,
+    "media_count": 13,
+    "username": "canzai_money"
+  },
+  "account_insights": {
+    "reach": "無法取得：HTTP Error 400: Bad Request",
+    "views": "無法取得：HTTP Error 400: Bad Request",
+    "accounts_engaged": "無法取得：HTTP Error 400: Bad Request",
+    "profile_views": "無法取得：HTTP Error 400: Bad Request",
+    "total_interactions": "無法取得：HTTP Error 400: Bad Request",
+    "follows_and_unfollows": "無法取得：HTTP Error 400: Bad Request"
+  },
+  "posts": [
+    {
+      "id": "18109990766529258",
+      "caption": "新光銀行併入台新：家裡有人用新光的，這張時間表先存起來。\n\n台新官方合併專區寫：新光銀行 2027 年 1 月 1 日併入台新。\n\n有新光保險業務的人先注意兩天：12/11 是保全、契約變更最後收件日，12/18 是新契約投保最後收件日。\n\n跨年那天最容易忘。12/31（四）晚上 6 點起，新光銀行官網、網路銀行、行動銀行 APP 停止服務，要轉帳、繳費請提前做完。\n\n同時有台新、新光兩家信用卡的人，看一下專區的「信用卡重疊戶整併」，專線 02-5589-5599。\n\n合併期間詐騙一定會變多。罐仔的原則很簡單：簡訊連結一律不點，有疑問自己打官方專線。\n\n傳給家裡用新光的爸媽。\n\n※ 查證日 2026/11/03，時間以台新新光合併專區公告為準。\n\n#新光銀行 #台新銀行 #銀行合併 #防詐騙 #罐仔",
+      "comments_count": 0,
+      "like_count": 0,
+      "media_product_type": "FEED",
+      "media_type": "CAROUSEL_ALBUM",
+      "permalink": "https://www.instagram.com/p/Df7CjPQjiKG/",
+      "timestamp": "2026-11-19T12:05:28+0000",
+      "date": "2026-11-19",
+      "insights": {
+        "error": "HTTP Error 400: Bad Request"
+      }
+    }
+  ]
+}
