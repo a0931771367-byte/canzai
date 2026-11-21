@@ -1,0 +1,41 @@
+{
+  "fetched_at": "2026-11-21T15:09:58.217194+08:00",
+  "since": "2026-11-20",
+  "until": "2026-11-21",
+  "account": {
+    "id": "17841467330075264",
+    "followers_count": 0,
+    "media_count": 14,
+    "username": "canzai_money"
+  },
+  "account_insights": {
+    "reach": "無法取得：HTTP Error 400: Bad Request",
+    "views": "無法取得：HTTP Error 400: Bad Request",
+    "accounts_engaged": "無法取得：HTTP Error 400: Bad Request",
+    "profile_views": "無法取得：HTTP Error 400: Bad Request",
+    "total_interactions": "無法取得：HTTP Error 400: Bad Request",
+    "follows_and_unfollows": "無法取得：HTTP Error 400: Bad Request"
+  },
+  "posts": [
+    {
+      "id": "18099351137129921",
+      "caption": "信用卡權益調整通知怎麼看？收到的人先看這支再刪 👀\n\n裡面寫的是你明年的回饋會怎麼變。罐仔拿永豐 2026 年版的通知來看，先找生效日，上面寫「2026/1/1 起」。\n\n再找哪些消費不再給回饋。這份寫的是大全聯（含 PX Pay 及全支付）的交易，不再提供紅利點數、現金回饋。常去全聯的人，這一條就差很多。\n\n不同意怎麼辦？通知裡也有寫：期限前通知銀行終止契約，或換發同銀行的其他卡。\n\n收藏起來，下次收到通知照著找。\n\n👉 追蹤罐仔：銀行通知太長，罐仔每週幫你挑重點。\n\n※ 永豐範例是 2026 年版通知，不是明年的新規定。查證日 2026/11/03，依各銀行公告為準。\n\n#信用卡 #權益調整 #到期倒數 #省錢 #罐仔",
+      "comments_count": 0,
+      "like_count": 1,
+      "media_product_type": "REELS",
+      "media_type": "VIDEO",
+      "permalink": "https://www.instagram.com/reel/Df9nYQLDfoE/",
+      "timestamp": "2026-11-20T12:06:12+0000",
+      "date": "2026-11-20",
+      "insights": {
+        "error": "HTTP Error 400: Bad Request",
+        "ig_reels_avg_watch_time": null,
+        "reels_skip_rate": null,
+        "votes": {
+          "A": 0,
+          "B": 0
+        }
+      }
+    }
+  ]
+}
