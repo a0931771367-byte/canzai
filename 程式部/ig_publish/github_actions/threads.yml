@@ -1,0 +1,42 @@
+# 罐仔 Threads：每 30 分鐘（GitHub 實際常延遲）發 內容部/Threads/ 裡時間到了的短文、處理自家貼文底下的新回覆。
+# IG 貼文同步到 Threads 不在這裡，是 publish.yml 發完 IG 後順便做。
+# 需要 secret：THREADS_TOKEN（沒設定就略過）。公開 repo 的執行紀錄任何人都看得到：程式只印數量，不印別人的帳號或內容。
+name: 罐仔 Threads
+on:
+  schedule:
+    - cron: "11,41 * * * *"
+  workflow_dispatch: {}
+concurrency: { group: threads, cancel-in-progress: false }
+permissions: { contents: write }
+jobs:
+  threads:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      THREADS_TOKEN: ${{ secrets.THREADS_TOKEN }}
+      CANZAI_CONTENT: 內容部
+    steps:
+      - name: 檢查 secret
+        id: chk
+        run: if [ -z "$THREADS_TOKEN" ]; then echo "還沒設定 THREADS_TOKEN，略過"; echo "skip=1" >> "$GITHUB_OUTPUT"; fi
+      - uses: actions/checkout@v4
+        if: steps.chk.outputs.skip != '1'
+      - uses: actions/setup-python@v5
+        if: steps.chk.outputs.skip != '1'
+        with: { python-version: "3.12" }
+      - run: pip install opencc
+        if: steps.chk.outputs.skip != '1'
+      - name: 發短文
+        if: steps.chk.outputs.skip != '1'
+        run: python3 程式部/threads/threads.py queue
+      - name: 處理自家貼文的回覆
+        if: steps.chk.outputs.skip != '1'
+        run: python3 程式部/threads/threads.py replies --hours 48
+      - name: 存回紀錄
+        if: steps.chk.outputs.skip != '1'
+        run: |
+          git config user.name "canzai-bot"; git config user.email "canzai-bot@users.noreply.github.com"
+          git add 程式部/threads/threads_ledger.json 2>/dev/null || true
+          git diff --cached --quiet && exit 0
+          git commit -qm "Threads 紀錄 $(date -u +%FT%TZ)"
+          for i in 1 2 3; do git pull -q --rebase && git push -q && break; sleep 5; done

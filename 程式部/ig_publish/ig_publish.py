@@ -198,7 +198,16 @@ def post(folder, base_url, dry=False, force=False, manual=False):
         covers = glob.glob(os.path.join(folder, "*_cover.jpg"))
         if covers:
             kw["cover_url"] = url(covers[0])
-        cid = create(**kw)
+        cid = None
+        if os.environ.get("CANZAI_TRIAL_REELS", "1") != "0":
+            # 試用 Reels：先推給非追蹤者，表現好自動轉正（官方 IG User Media 的 trial_params）
+            try:
+                cid = create(trial_params=json.dumps({"graduation_strategy": "SS_PERFORMANCE"}), **kw)
+                print("試用 Reels：已開（SS_PERFORMANCE，表現好自動分享給追蹤者）")
+            except SystemExit as e:
+                print(f"試用 Reels：API 不接受，改發一般 Reels（{str(e)[:200]}）")
+        if cid is None:
+            cid = create(**kw)
     elif len(imgs) == 1:
         print("單張圖片")
         cid = create(image_url=url(imgs[0]), caption=caption)

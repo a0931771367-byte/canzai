@@ -36,3 +36,16 @@ jobs:
           echo "::add-mask::$new"
           gh secret set IG_TOKEN --repo "$GITHUB_REPOSITORY" --body "$new"
           echo "續期成功，新 token 還有 ${days} 天"
+      - name: 續期 Threads token
+        env:
+          THREADS_TOKEN: ${{ secrets.THREADS_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_SECRETS_PAT }}
+        run: |
+          set -euo pipefail
+          if [ -z "$THREADS_TOKEN" ] || [ -z "$GH_TOKEN" ]; then echo "還沒設定 THREADS_TOKEN 或 GH_SECRETS_PAT，略過"; exit 0; fi
+          res=$(curl -sfS "https://graph.threads.net/refresh_access_token?grant_type=th_refresh_token&access_token=${THREADS_TOKEN}")
+          new=$(echo "$res" | python3 -c 'import sys,json;print(json.load(sys.stdin)["access_token"])')
+          days=$(echo "$res" | python3 -c 'import sys,json;print(json.load(sys.stdin)["expires_in"]//86400)')
+          echo "::add-mask::$new"
+          gh secret set THREADS_TOKEN --repo "$GITHUB_REPOSITORY" --body "$new"
+          echo "Threads 續期成功，新 token 還有 ${days} 天"
