@@ -1,11 +1,11 @@
 {
-  "fetched_at": "2026-11-17T15:55:48.489165+08:00",
+  "fetched_at": "2026-11-23T15:40:14.435034+08:00",
   "since": "2026-11-16",
-  "until": "2026-11-17",
+  "until": "2026-11-23",
   "account": {
     "id": "17841467330075264",
     "followers_count": 0,
-    "media_count": 10,
+    "media_count": 15,
     "username": "canzai_money"
   },
   "account_insights": {
@@ -16,5 +16,100 @@
     "total_interactions": "無法取得：HTTP Error 400: Bad Request",
     "follows_and_unfollows": "無法取得：HTTP Error 400: Bad Request"
   },
-  "posts": []
+  "posts": [
+    {
+      "id": "18183855349436978",
+      "caption": "日本刷卡回饋怎麼選？年底要去日本的朋友，出發前傳給他 👀\n\n在日本刷 NT$30,000，用一般 1% 的卡拿 300 元；用海外無上限的卡，可以多拿 366 元。\n\n罐仔查了官網，滙豐現金回饋御璽卡寫的是海外 2.22%、現金回饋無上限、沒有最低消費門檻，3 萬就是 666 元。要注意註腳：海外不含歐盟及英國實體通路，日本不在排除名單。\n\n優惠期間寫到 2026/12/31，明年要重看一次。海外交易手續費各卡不同，刷之前查自己的卡。\n\n下一支想看哪個？留言 A「出國前 3 個刷卡設定」或 B「2026 回饋總共拿多少」，票多的先做。\n\n※ 查證日 2026/11/09，回饋依銀行官網公告為準。本篇沒有業配。\n\n#日本旅遊 #出國刷卡 #信用卡回饋 #省錢 #罐仔",
+      "comments_count": 0,
+      "like_count": 0,
+      "media_product_type": "REELS",
+      "media_type": "VIDEO",
+      "permalink": "https://www.instagram.com/reel/DgB57FDgooo/",
+      "timestamp": "2026-11-22T04:05:20+0000",
+      "date": "2026-11-22",
+      "insights": {
+        "error": "HTTP Error 400: Bad Request",
+        "ig_reels_avg_watch_time": null,
+        "reels_skip_rate": null,
+        "votes": {
+          "A": 0,
+          "B": 0
+        }
+      }
+    },
+    {
+      "id": "18099351137129921",
+      "caption": "信用卡權益調整通知怎麼看？收到的人先看這支再刪 👀\n\n裡面寫的是你明年的回饋會怎麼變。罐仔拿永豐 2026 年版的通知來看，先找生效日，上面寫「2026/1/1 起」。\n\n再找哪些消費不再給回饋。這份寫的是大全聯（含 PX Pay 及全支付）的交易，不再提供紅利點數、現金回饋。常去全聯的人，這一條就差很多。\n\n不同意怎麼辦？通知裡也有寫：期限前通知銀行終止契約，或換發同銀行的其他卡。\n\n收藏起來，下次收到通知照著找。\n\n👉 追蹤罐仔：銀行通知太長，罐仔每週幫你挑重點。\n\n※ 永豐範例是 2026 年版通知，不是明年的新規定。查證日 2026/11/03，依各銀行公告為準。\n\n#信用卡 #權益調整 #到期倒數 #省錢 #罐仔",
+      "comments_count": 0,
+      "like_count": 1,
+      "media_product_type": "REELS",
+      "media_type": "VIDEO",
+      "permalink": "https://www.instagram.com/reel/Df9nYQLDfoE/",
+      "timestamp": "2026-11-20T12:06:12+0000",
+      "date": "2026-11-20",
+      "insights": {
+        "error": "HTTP Error 400: Bad Request",
+        "ig_reels_avg_watch_time": null,
+        "reels_skip_rate": null,
+        "votes": {
+          "A": 0,
+          "B": 0
+        }
+      }
+    },
+    {
+      "id": "18109990766529258",
+      "caption": "新光銀行併入台新：家裡有人用新光的，這張時間表先存起來。\n\n台新官方合併專區寫：新光銀行 2027 年 1 月 1 日併入台新。\n\n有新光保險業務的人先注意兩天：12/11 是保全、契約變更最後收件日，12/18 是新契約投保最後收件日。\n\n跨年那天最容易忘。12/31（四）晚上 6 點起，新光銀行官網、網路銀行、行動銀行 APP 停止服務，要轉帳、繳費請提前做完。\n\n同時有台新、新光兩家信用卡的人，看一下專區的「信用卡重疊戶整併」，專線 02-5589-5599。\n\n合併期間詐騙一定會變多。罐仔的原則很簡單：簡訊連結一律不點，有疑問自己打官方專線。\n\n傳給家裡用新光的爸媽。\n\n※ 查證日 2026/11/03，時間以台新新光合併專區公告為準。\n\n#新光銀行 #台新銀行 #銀行合併 #防詐騙 #罐仔",
+      "comments_count": 0,
+      "like_count": 0,
+      "media_product_type": "FEED",
+      "media_type": "CAROUSEL_ALBUM",
+      "permalink": "https://www.instagram.com/p/Df7CjPQjiKG/",
+      "timestamp": "2026-11-19T12:05:28+0000",
+      "date": "2026-11-19",
+      "insights": {
+        "error": "HTTP Error 400: Bad Request"
+      }
+    },
+    {
+      "id": "18001739045824671",
+      "caption": "首刷禮怎麼拿才不落空？辦卡前，傳給正在看首刷禮的朋友 👀\n\n首刷禮不是辦了就有。罐仔拿星展官網的條款來看，有三個細節。\n\n申辦期間是 2026/11/01～2026/12/31。核卡日後 30 天內，要完成新戶指定任務。活動結束後，最快 3 個月才統一檢核，不是刷完就入帳。\n\n最後一題最重要：這張卡，你平常真的會用到嗎？用不到，禮再大也不划算。\n\n辦卡之前，罐仔先幫你把條款小字讀完。\n\n※ 查證日 2026/11/03，條件依銀行官網公告為準。本篇不是推薦辦卡，也沒有業配。\n\n#首刷禮 #信用卡 #辦卡 #省錢 #罐仔",
+      "comments_count": 0,
+      "like_count": 0,
+      "media_product_type": "REELS",
+      "media_type": "VIDEO",
+      "permalink": "https://www.instagram.com/reel/Df4d-PyCfZD/",
+      "timestamp": "2026-11-18T12:07:51+0000",
+      "date": "2026-11-18",
+      "insights": {
+        "error": "HTTP Error 400: Bad Request",
+        "ig_reels_avg_watch_time": null,
+        "reels_skip_rate": null,
+        "votes": {
+          "A": 0,
+          "B": 0
+        }
+      }
+    },
+    {
+      "id": "17992132413115315",
+      "caption": "信用卡回饋到期倒數：玉山 Unicard、星展 eco 的優惠只寫到 12/31，這支先存起來 👀\n\n玉山 Unicard UP 選最高 4.5%，刷 1 萬是 450 點，但官網活動期間只寫到 2026/12/31，玉山還沒公布明年的條件。\n\n你的卡，優惠寫到哪一天？\n\n很多卡的權益期限都寫著 2026/12/31，明年的新權益要等 12 月銀行公告。\n\n罐仔翻了官網，找到兩個例子。玉山 Unicard 的百大指定消費加碼，活動期間寫到 2026/12/31。星展 eco 永續卡的海外最高 5%，權益期間也到 2026/12/31。\n\n這不是說這些卡不好。是 1 月以後的回饋，要重看一次。\n\n下一支想看哪個？留言 A「首刷禮怎麼看才不吃虧」或 B「新光跨年哪些服務會停」，票多的先做。\n\n👉 追蹤罐仔：到期倒數每週一集，下一批到期名單下週出。\n\n※ 查證日 2026/11/03，實際權益依各銀行官網公告為準。本篇沒有業配。\n\n#信用卡 #信用卡回饋 #到期倒數 #省錢 #罐仔",
+      "comments_count": 0,
+      "like_count": 0,
+      "media_product_type": "REELS",
+      "media_type": "VIDEO",
+      "permalink": "https://www.instagram.com/reel/Df147HZlA7K/",
+      "timestamp": "2026-11-17T12:05:34+0000",
+      "date": "2026-11-17",
+      "insights": {
+        "error": "HTTP Error 400: Bad Request",
+        "ig_reels_avg_watch_time": null,
+        "reels_skip_rate": null,
+        "votes": {
+          "A": 0,
+          "B": 0
+        }
+      }
+    }
+  ]
 }

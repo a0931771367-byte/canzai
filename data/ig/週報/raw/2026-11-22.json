@@ -1,0 +1,41 @@
+{
+  "fetched_at": "2026-11-23T15:40:05.501262+08:00",
+  "since": "2026-11-22",
+  "until": "2026-11-23",
+  "account": {
+    "id": "17841467330075264",
+    "followers_count": 0,
+    "media_count": 15,
+    "username": "canzai_money"
+  },
+  "account_insights": {
+    "reach": "無法取得：HTTP Error 400: Bad Request",
+    "views": "無法取得：HTTP Error 400: Bad Request",
+    "accounts_engaged": "無法取得：HTTP Error 400: Bad Request",
+    "profile_views": "無法取得：HTTP Error 400: Bad Request",
+    "total_interactions": "無法取得：HTTP Error 400: Bad Request",
+    "follows_and_unfollows": "無法取得：HTTP Error 400: Bad Request"
+  },
+  "posts": [
+    {
+      "id": "18183855349436978",
+      "caption": "日本刷卡回饋怎麼選？年底要去日本的朋友，出發前傳給他 👀\n\n在日本刷 NT$30,000，用一般 1% 的卡拿 300 元；用海外無上限的卡，可以多拿 366 元。\n\n罐仔查了官網，滙豐現金回饋御璽卡寫的是海外 2.22%、現金回饋無上限、沒有最低消費門檻，3 萬就是 666 元。要注意註腳：海外不含歐盟及英國實體通路，日本不在排除名單。\n\n優惠期間寫到 2026/12/31，明年要重看一次。海外交易手續費各卡不同，刷之前查自己的卡。\n\n下一支想看哪個？留言 A「出國前 3 個刷卡設定」或 B「2026 回饋總共拿多少」，票多的先做。\n\n※ 查證日 2026/11/09，回饋依銀行官網公告為準。本篇沒有業配。\n\n#日本旅遊 #出國刷卡 #信用卡回饋 #省錢 #罐仔",
+      "comments_count": 0,
+      "like_count": 0,
+      "media_product_type": "REELS",
+      "media_type": "VIDEO",
+      "permalink": "https://www.instagram.com/reel/DgB57FDgooo/",
+      "timestamp": "2026-11-22T04:05:20+0000",
+      "date": "2026-11-22",
+      "insights": {
+        "error": "HTTP Error 400: Bad Request",
+        "ig_reels_avg_watch_time": null,
+        "reels_skip_rate": null,
+        "votes": {
+          "A": 0,
+          "B": 0
+        }
+      }
+    }
+  ]
+}
