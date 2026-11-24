@@ -1,0 +1,41 @@
+{
+  "fetched_at": "2026-11-24T17:55:35.799867+08:00",
+  "since": "2026-11-23",
+  "until": "2026-11-24",
+  "account": {
+    "id": "17841467330075264",
+    "followers_count": 0,
+    "media_count": 16,
+    "username": "canzai_money"
+  },
+  "account_insights": {
+    "reach": "無法取得：HTTP Error 400: Bad Request",
+    "views": "無法取得：HTTP Error 400: Bad Request",
+    "accounts_engaged": "無法取得：HTTP Error 400: Bad Request",
+    "profile_views": "無法取得：HTTP Error 400: Bad Request",
+    "total_interactions": "無法取得：HTTP Error 400: Bad Request",
+    "follows_and_unfollows": "無法取得：HTTP Error 400: Bad Request"
+  },
+  "posts": [
+    {
+      "id": "18003470007042624",
+      "caption": "日本刷卡回饋：星展 eco 刷超過 1.5 萬只剩 1%，12 月出發前先算好上限。\n\n星展 eco 在日本、韓國等指定地區的實體店消費，官網寫的是 1% 無上限加上 4% 加碼，合計 5%。但加碼每期帳單最多 600 點，也就是刷到 15,000 元就到頂。\n\n刷 15,000 元拿 750 點，刷 25,000 元只拿 850 點，多刷的 1 萬只多 100 點。罐仔自己會在接近 1.5 萬的時候換一張海外無上限的卡。\n\n還有一個條件：要用外幣結帳。店員問台幣還是日圓，說日圓。\n\n下一支想看哪個？留言 A「雙12 蝦幣券 vs 卡回饋」或 B「12/31 前要做的 3 件事」。\n\n※ 查證日 2026/11/11，活動期間 2026/01/01～12/31，依星展官網公告為準。本篇沒有業配。\n\n#日本旅遊 #出國刷卡 #信用卡回饋 #星展eco #罐仔",
+      "comments_count": 0,
+      "like_count": 0,
+      "media_product_type": "REELS",
+      "media_type": "VIDEO",
+      "permalink": "https://www.instagram.com/reel/DgFVsNEAXQt/",
+      "timestamp": "2026-11-23T12:05:32+0000",
+      "date": "2026-11-23",
+      "insights": {
+        "error": "HTTP Error 400: Bad Request",
+        "ig_reels_avg_watch_time": null,
+        "reels_skip_rate": null,
+        "votes": {
+          "A": 0,
+          "B": 0
+        }
+      }
+    }
+  ]
+}
