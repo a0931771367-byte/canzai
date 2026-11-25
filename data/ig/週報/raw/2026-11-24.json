@@ -1,0 +1,41 @@
+{
+  "fetched_at": "2026-11-25T16:35:32.592632+08:00",
+  "since": "2026-11-24",
+  "until": "2026-11-25",
+  "account": {
+    "id": "17841467330075264",
+    "followers_count": 0,
+    "media_count": 17,
+    "username": "canzai_money"
+  },
+  "account_insights": {
+    "reach": "無法取得：HTTP Error 400: Bad Request",
+    "views": "無法取得：HTTP Error 400: Bad Request",
+    "accounts_engaged": "無法取得：HTTP Error 400: Bad Request",
+    "profile_views": "無法取得：HTTP Error 400: Bad Request",
+    "total_interactions": "無法取得：HTTP Error 400: Bad Request",
+    "follows_and_unfollows": "無法取得：HTTP Error 400: Bad Request"
+  },
+  "posts": [
+    {
+      "id": "18364031467247854",
+      "caption": "海外刷卡手續費 1.5%：要出國的朋友，這筆帳先算給他看。\n\n在國外刷卡，帳單上會多一筆手續費。以星展官網的收費標準為例，國外的外幣交易收 1.5%：1% 是付給國際組織的，另外 0.5% 是銀行的國外交易服務費。\n\n所以拿一張國內 1% 的卡去國外刷 3 萬，回饋 300 元、手續費 450 元，等於倒賠 150 元。海外回饋要超過 1.5% 才開始有賺。\n\n罐仔出國前會先打開自己卡片的官網，看「海外回饋」寫多少，再決定帶哪張。手續費每家寫法不同，以你的發卡銀行公告為準。\n\n※ 回饋率為示意，手續費查證日 2026/11/11（星展官網）。本篇沒有業配。\n\n#出國刷卡 #海外手續費 #信用卡回饋 #省錢 #罐仔",
+      "comments_count": 0,
+      "like_count": 0,
+      "media_product_type": "REELS",
+      "media_type": "VIDEO",
+      "permalink": "https://www.instagram.com/reel/DgH6k5lkpQl/",
+      "timestamp": "2026-11-24T12:06:19+0000",
+      "date": "2026-11-24",
+      "insights": {
+        "error": "HTTP Error 400: Bad Request",
+        "ig_reels_avg_watch_time": null,
+        "reels_skip_rate": null,
+        "votes": {
+          "A": 0,
+          "B": 0
+        }
+      }
+    }
+  ]
+}
