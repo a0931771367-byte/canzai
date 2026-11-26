@@ -1,0 +1,20 @@
+{
+  "fetched_at": "2026-11-26T16:19:07.758268+08:00",
+  "since": "2026-11-25",
+  "until": "2026-11-26",
+  "account": {
+    "id": "17841467330075264",
+    "followers_count": 0,
+    "media_count": 17,
+    "username": "canzai_money"
+  },
+  "account_insights": {
+    "reach": "無法取得：HTTP Error 400: Bad Request",
+    "views": "無法取得：HTTP Error 400: Bad Request",
+    "accounts_engaged": "無法取得：HTTP Error 400: Bad Request",
+    "profile_views": "無法取得：HTTP Error 400: Bad Request",
+    "total_interactions": "無法取得：HTTP Error 400: Bad Request",
+    "follows_and_unfollows": "無法取得：HTTP Error 400: Bad Request"
+  },
+  "posts": []
+}
