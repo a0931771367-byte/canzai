@@ -3,11 +3,12 @@
 # 需要的 repo secrets：IG_TOKEN（IG_USER_ID 可不填，會自己查）（罐子在 repo Settings → Secrets and variables → Actions 新增）。沒設定時自動略過。
 name: 罐仔自動發文
 on:
-  schedule:
-    - cron: "*/10 * * * *"
-    # GitHub 的 */10 實際常拖好幾小時才跑一次，所以在發文時段（台灣 12:00、20:00）前後多排幾次
-    - cron: "2,7,13,19,27,38,52 4 * * *"
-    - cron: "2,7,13,19,27,38,52 12 * * *"
+  # 2026-11-26 罐子決定結束罐仔專案，定時排程已停用（保留手動觸發）
+  # schedule:
+  #  - cron: "*/10 * * * *"
+  #  # GitHub 的 */10 實際常拖好幾小時才跑一次，所以在發文時段（台灣 12:00、20:00）前後多排幾次
+  #  - cron: "2,7,13,19,27,38,52 4 * * *"
+  #  - cron: "2,7,13,19,27,38,52 12 * * *"
   workflow_dispatch:
     inputs:
       late: { description: "補發已錯過的貼文編號（例如 02），平常留空", type: string, default: "" }

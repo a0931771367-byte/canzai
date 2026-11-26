@@ -7,8 +7,9 @@
 # 選填 ANTHROPIC_API_KEY：有設才用 Haiku 5.5 判斷沒寫關鍵字的私訊是不是想選卡（intent.py，金鑰請建在設了月上限的專用工作區）。
 name: 選卡自動回覆
 on:
-  schedule:
-    - cron: "*/5 * * * *"
+  # 2026-11-26 罐子決定結束罐仔專案，定時排程已停用（保留手動觸發）
+  # schedule:
+  #  - cron: "*/5 * * * *"
   workflow_dispatch:
     inputs:
       reset_errors: { description: "連續錯誤歸零（修好問題後勾這個再跑）", type: boolean, default: false }
