@@ -5,8 +5,9 @@
 # 續期失敗（token 已過期）時 job 失敗、GitHub 寄信，要罐子重新授權一次。
 name: 續期 IG token
 on:
-  schedule:
-    - cron: "7 23 * * 0"   # UTC 週日 23:07 = 台灣週一 07:07
+  # 2026-11-26 罐子決定結束罐仔專案，定時排程已停用（保留手動觸發）
+  # schedule:
+  #  - cron: "7 23 * * 0"   # UTC 週日 23:07 = 台灣週一 07:07
   workflow_dispatch: {}
 permissions: {}
 jobs:

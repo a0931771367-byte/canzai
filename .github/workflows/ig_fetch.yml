@@ -4,8 +4,9 @@
 # 失敗（token 過期、API 錯誤）時 job 會失敗，GitHub 寄信通知 repo 擁有者，不會 commit。
 name: 罐仔 IG 數據
 on:
-  schedule:
-    - cron: "13 0 * * *"   # UTC 00:13 = 台灣 08:13
+  # 2026-11-26 罐子決定結束罐仔專案，定時排程已停用（保留手動觸發）
+  # schedule:
+  #  - cron: "13 0 * * *"   # UTC 00:13 = 台灣 08:13
   workflow_dispatch: {}
 concurrency: { group: ig-data, cancel-in-progress: false }
 permissions: { contents: write }
