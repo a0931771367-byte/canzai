@@ -305,6 +305,11 @@ function postMD(post, info) {
   });
   lines.push('', '## IG 文案（直接複製）', '', '```', post.caption.trim(), '', post.hashtags.join(' '), '```', '',
     `**封面替代文字（Alt text）**：${post.alt}`, '');
+  // 2026-11-15 社群部：每張圖都要替代文字（IG 搜尋會讀）。輪播逐張產生
+  const strip2 = t => String(t || '').replace(/<kw>/g, `「${CONFIG.comment_keywords[0]}」`).replace(/\*/g, '').replace(/\n/g, ' ');
+  if (post.type === 'carousel') lines.push('**每張圖替代文字**：', ...post.slides.map((s, i) => `${i + 1}. 罐仔圖卡：${strip2(s.title || (s.kind === 'vote' ? '下期投票' : ''))}${s.body ? '。' + strip2(s.body) : ''}${s.items ? '。' + s.items.map(strip2).join('、') : ''}${s.rows ? '。' + s.rows.map(r => strip2(r[0]) + ' ' + strip2(r[1])).join('、') : ''}`), '');
+  // 2026-11-15 程式部：貼文.md 有「## Threads 版」就用它發 Threads（純文字、450 字內、最後一行一個 #主題）
+  if (post.threads) lines.push('## Threads 版', '', post.threads.trim(), ...(post.threads_topic ? ['', '#' + post.threads_topic] : []), '');
   if (post.music && post.type !== 'reel') lines.push(`**配樂建議**：${post.music}`, '');
   if (post.prereq?.length) lines.push('## 發文前提（罐子或社群部確認）', '', ...post.prereq.map(f => `- [ ] ${f}`), '');
   lines.push('## 發文前查證', '', ...(typeof post.factcheck === 'string' ? [post.factcheck] : post.factcheck?.length ? post.factcheck.map(f => /^- \[[ x]\]/.test(f) ? f : `- [ ] ${f}`) : ['- 本篇沒有引用特定銀行數字，範例數字已在圖上標示「示意」。']), '');
